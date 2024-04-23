@@ -23,4 +23,3 @@ while True:
 
     pygame.display.flip()  # Refresh on-screen display
     clock.tick(60)         # wait until next frame (at 60 FPS)
-    
