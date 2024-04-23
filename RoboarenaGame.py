@@ -32,7 +32,21 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             raise SystemExit
-
+        
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_w:
+                print("w")
+                # add movement
+            elif event.key == pygame.K_a:
+                 print("a")
+                # add movement
+            elif event.key == pygame.K_s:
+                 print("s")
+                # add movement
+            elif event.key == pygame.K_d:
+                 print("d")
+                # add movement
+                
 # Do logical updates here.
 # ...
 
