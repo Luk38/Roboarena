@@ -13,6 +13,9 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 clock = pygame.time.Clock()
 
+# Variable if game active
+game_active = False
+
 # Button
 BUTTON_WIDTH = 200
 BUTTON_HEIGHT = 100
@@ -45,27 +48,39 @@ while True:
             elif event.key == pygame.K_d:
                 print("d")
                 # add movement
+        # add Mouse movement
         if event.type == pygame.MOUSEMOTION:
             print(event.pos)
-            # add Mouse movement
+        # handler for mouse button
         if event.type == pygame.MOUSEBUTTONDOWN:
             print("Mouse Button pressed")
-            # handler for mouse button
+            if text_rect.collidepoint(event.pos):
+                game_active = True
 
-# Do logical updates here.
-# ...
+    if game_active:
+        # Do logical updates here.
+        # ...
 
-    screen.fill("purple")  # Fill the display with a solid color
+        screen.fill("light blue")  # Fill the display with a solid color
 
-# Render the graphics here.
-# ...
+        # Render the graphics here.
+        # ...
+        
+    else:    
+        # Do logical updates here.
+        # ...
 
-# Draw Start-Button
-    pygame.draw.rect(screen, BUTTON_COLOR,
-        (SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2,
-        SCREEN_HEIGHT // 2 - BUTTON_HEIGHT // 2,
-        BUTTON_WIDTH, BUTTON_HEIGHT))
-    screen.blit(text_surface, text_rect)
+        screen.fill("purple")  # Fill the display with a solid color
+
+        # Render the graphics here.
+        # ...
+
+        # Draw Start-Button
+        pygame.draw.rect(screen, BUTTON_COLOR,
+                        (SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2,
+                        SCREEN_HEIGHT // 2 - BUTTON_HEIGHT // 2,
+                        BUTTON_WIDTH, BUTTON_HEIGHT))
+        screen.blit(text_surface, text_rect)
 
     pygame.display.flip()  # Refresh on-screen display
     clock.tick(60)         # wait until next frame (at 60 FPS)
