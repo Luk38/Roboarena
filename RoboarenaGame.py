@@ -45,6 +45,13 @@ while True:
             elif event.key == pygame.K_d:
                 print("d")
                 # add movement
+        if event.type == pygame.MOUSEMOTION:
+                print(event.pos)
+                # add Mouse movement
+        if event.type == pygame.MOUSEBUTTONDOWN:
+                print("Mouse Button pressed")
+                # handler for mouse button
+                               
 # Do logical updates here.
 # ...
 
