@@ -58,28 +58,28 @@ while True:
                 game_active = True
 
     if game_active:
-    # Do logical updates here.
-    # ...
+        # Do logical updates here.
+        # ...
 
         screen.fill("light blue")  # Fill the display with a solid color
 
-    # Render the graphics here.
-    # ...
+        # Render the graphics here.
+        # ...
         
     else:    
-    # Do logical updates here.
-    # ...
+        # Do logical updates here.
+        # ...
 
         screen.fill("purple")  # Fill the display with a solid color
 
-    # Render the graphics here.
-    # ...
+        # Render the graphics here.
+        # ...
 
-    # Draw Start-Button
+        # Draw Start-Button
         pygame.draw.rect(screen, BUTTON_COLOR,
-            (SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2,
-            SCREEN_HEIGHT // 2 - BUTTON_HEIGHT // 2,
-            BUTTON_WIDTH, BUTTON_HEIGHT))
+                        (SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2,
+                        SCREEN_HEIGHT // 2 - BUTTON_HEIGHT // 2,
+                        BUTTON_WIDTH, BUTTON_HEIGHT))
         screen.blit(text_surface, text_rect)
 
     pygame.display.flip()  # Refresh on-screen display
