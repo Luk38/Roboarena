@@ -75,10 +75,7 @@ while True:
         # ...
 
         # Draw Start-Button
-        pygame.draw.rect(screen, BUTTON_COLOR, 
-                         (SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, 
-                          SCREEN_HEIGHT // 2 - BUTTON_HEIGHT // 2, 
-                          BUTTON_WIDTH, BUTTON_HEIGHT))
+        pygame.draw.rect(screen, BUTTON_COLOR, (SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, SCREEN_HEIGHT // 2 - BUTTON_HEIGHT // 2, BUTTON_WIDTH, BUTTON_HEIGHT))
         screen.blit(text_surface, text_rect)
 
     pygame.display.flip()  # Refresh on-screen display
