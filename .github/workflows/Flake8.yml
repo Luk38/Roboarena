@@ -1,0 +1,23 @@
+on:
+  pull_request:
+    types: [opened, reopened]  # Run on new and reopened pull requests
+
+jobs:
+  flake8:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4  # Use the latest version for stability
+
+      - name: Set up Python
+        uses: actions/setup-python@v3  # Use a compatible version with flake8
+        with:
+          python-version: '3.x'   # Let workflow choose optimal Python 3 version
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8
+
+      - name: Run Flake8
+        run: |
+          flake8 .
