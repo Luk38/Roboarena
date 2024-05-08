@@ -1,5 +1,6 @@
 import pygame
-from arena import *
+from arena import arena
+from BasicRobot import BasicRobot
 pygame.init()
 
 # Define Screen and Colors
@@ -30,7 +31,10 @@ text_rect = (
     text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)))
 
 # Arena
-Arena = arena(1000,1000,50,50)
+Arena = arena(1000, 1000, 50, 50)
+
+# Player
+Player = BasicRobot("lightblue", 640, 500, 60, 45)
 
 while True:
     # Process player inputs.
@@ -64,10 +68,12 @@ while True:
         # Do logical updates here.
         # ...
 
-        screen.fill("light blue")  # Fill the display with a solid color
+        screen.fill("light yellow")  # Fill the display with a solid color
         Arena.draw(screen)
         # Render the graphics here.
         # ...
+        Player.draw(screen)
+
     else:
         # Do logical updates here.
         # ...
@@ -78,7 +84,8 @@ while True:
         # ...
 
         # Draw Start-Button
-        pygame.draw.rect(screen, BUTTON_COLOR, (SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, SCREEN_HEIGHT // 2 - BUTTON_HEIGHT // 2, BUTTON_WIDTH, BUTTON_HEIGHT))
+        pygame.draw.rect(screen, BUTTON_COLOR, 
+                         (SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, SCREEN_HEIGHT // 2 - BUTTON_HEIGHT // 2, BUTTON_WIDTH, BUTTON_HEIGHT))
         screen.blit(text_surface, text_rect)
 
     pygame.display.flip()  # Refresh on-screen display
