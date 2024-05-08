@@ -2,7 +2,7 @@ import pygame
 
 
 class arena:
-    def __init__(self,height,width,tileheight,tilewidth):
+    def __init__(self, height, width, tileheight, tilewidth):
         self.height = height
         self.width = width
         self.tileheight = tileheight
@@ -20,8 +20,8 @@ class arena:
              [y, y, y, n, n, n, n, n, n, n, n, n, n, n, n, n, r, o, r, r],
              [n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, r, o, r],
              [n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, r, o],
-             [n, x ,x, x, x, x, x, n, n, x, x, n, n, n, n, n, n, n, n, r],
-             [n, n ,n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n],
+             [n, x, x, x, x, x, x, n, n, x, x, n, n, n, n, n, n, n, n, r],
+             [n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n],
              [n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n],
              [n, n, n, n, n, n, n, x, x, x, n, n, n, n, n, n, n, n, n, n],
              [n, n, n, n, n, n, n, n, n, n, n, n, n, n, x, x, x, x, x, x],
@@ -34,8 +34,11 @@ class arena:
              [n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n],
              [n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n]]
 
-    def draw(self,screen):
-        for i in range(0,len(self.Tiles)):
-            for j in range(0,len(self.Tiles[i])):
+    def draw(self, screen):
+        for i in range(0, len(self.Tiles)):
+            for j in range(0, len(self.Tiles[i])):
                 pygame.draw.rect(screen, self.Tiles[i][j], 
-                                 (j*self.tileheight, i*self.tilewidth, self.tilewidth, self.tileheight))
+                                 (j*self.tileheight, 
+                                  i*self.tilewidth, 
+                                  self.tilewidth, 
+                                  self.tileheight))

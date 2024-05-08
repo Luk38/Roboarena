@@ -37,8 +37,8 @@ Arena = arena(1000, 1000, 50, 50)
 Player = BasicRobot("lightblue", 640, 500, 20, 45)
 
 # Movement directions
-x_dir=0
-y_dir=0
+x_dir = 0
+y_dir = 0
 
 while True:
     # Process player inputs.
@@ -48,23 +48,23 @@ while True:
             raise SystemExit
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_w:
-                y_dir=-1
+                y_dir = -1
             elif event.key == pygame.K_a:
-                x_dir=-1
+                x_dir = -1
             elif event.key == pygame.K_s:
-                y_dir=1
+                y_dir = 1
             elif event.key == pygame.K_d:
-                x_dir=1
+                x_dir = 1
 
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_w:
-                y_dir=0
+                y_dir = 0
             elif event.key == pygame.K_a:
-                x_dir=0
+                x_dir = 0
             elif event.key == pygame.K_s:
-                y_dir=0
+                y_dir = 0
             elif event.key == pygame.K_d:
-                x_dir=0        
+                x_dir = 0
         # add Mouse movement
         if event.type == pygame.MOUSEMOTION:
             print(event.pos)
@@ -94,12 +94,14 @@ while True:
         # ...
 
         # Draw Start-Button
-        pygame.draw.rect(screen, BUTTON_COLOR, 
-                         (SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2, SCREEN_HEIGHT // 2 - BUTTON_HEIGHT // 2, BUTTON_WIDTH, BUTTON_HEIGHT))
+        pygame.draw.rect(screen, BUTTON_COLOR,
+                         (SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2,
+                           SCREEN_HEIGHT // 2 - BUTTON_HEIGHT // 2,
+                             BUTTON_WIDTH, BUTTON_HEIGHT))
         screen.blit(text_surface, text_rect)
 
-    Player.x+=10*x_dir
-    Player.y+=10*y_dir
+    Player.x += 10*x_dir
+    Player.y += 10*y_dir
 
     pygame.display.flip()  # Refresh on-screen display
     clock.tick(60)         # wait until next frame (at 60 FPS)
