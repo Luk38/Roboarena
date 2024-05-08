@@ -1,5 +1,5 @@
 import pygame
-
+from arena import *
 pygame.init()
 
 # Define Screen and Colors
@@ -28,6 +28,9 @@ font = pygame.font.Font(None, 36)
 text_surface = font.render(BUTTON_TEXT, True, BUTTON_TEXT_COLOR)
 text_rect = (
     text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)))
+
+# Arena
+Arena = arena(1000,1000,50,50)
 
 while True:
     # Process player inputs.
@@ -62,7 +65,7 @@ while True:
         # ...
 
         screen.fill("light blue")  # Fill the display with a solid color
-
+        Arena.draw(screen)
         # Render the graphics here.
         # ...
     else:
