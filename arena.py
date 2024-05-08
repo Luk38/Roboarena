@@ -8,7 +8,7 @@ class arena:
         self.tileheight = tileheight
         self.tilewidth = tilewidth
 
-    n = pygame.Color('purple')
+    n = pygame.Color('lightyellow')
     g = pygame.Color('purple')
     b = pygame.Color('blue')
     y = pygame.Color('yellow')

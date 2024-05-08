@@ -11,3 +11,4 @@ class BasicRobot:
 
     def draw(self, screen):
         pygame.draw.circle(screen, self.color, (self.x, self.y), self.r)
+        pygame.draw.circle(screen, 'black', (self.x, self.y), self.r,width=1)
