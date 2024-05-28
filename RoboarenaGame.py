@@ -11,6 +11,7 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("RoboArena")
 
 clock = pygame.time.Clock()
 
@@ -35,6 +36,12 @@ Arena = arena(1000, 1000, 50, 50)
 
 # Player
 Player = BasicRobot("lightblue", 640, 500, 20, 45)
+
+# Robots
+Robot1 = BasicRobot("yellow", 100, 50, 30, 0)
+Robot2 = BasicRobot("red", 190, 50, 30, 0)
+Robot3 = BasicRobot("darkred", 270, 50, 30, 0)
+Robot4 = BasicRobot("black", 360, 50, 30, 0)
 
 # Movement directions
 x_dir = 0
@@ -83,6 +90,15 @@ while True:
         # Render the graphics here.
         # ...
         Player.draw(screen)
+        
+        Robot1.draw(screen)
+        Robot2.draw(screen)
+        Robot3.draw(screen)
+        Robot4.draw(screen)
+        Robot1.update()
+        Robot2.update()
+        Robot3.update()
+        Robot4.update()
 
     else:
         # Do logical updates here.
