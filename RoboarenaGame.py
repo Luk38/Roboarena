@@ -1,6 +1,7 @@
 import pygame
 from arena import arena
 from BasicRobot import BasicRobot
+
 pygame.init()
 
 # Define Screen and Colors
@@ -28,8 +29,7 @@ BUTTON_TEXT_COLOR = "purple"
 # Font
 font = pygame.font.Font(None, 36)
 text_surface = font.render(BUTTON_TEXT, True, BUTTON_TEXT_COLOR)
-text_rect = (
-    text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)))
+text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
 
 # Arena
 Arena = arena(1000, 1000, 50, 50)
@@ -90,7 +90,7 @@ while True:
         # Render the graphics here.
         # ...
         Player.draw(screen)
-        
+
         Robot1.draw(screen)
         Robot2.draw(screen)
         Robot3.draw(screen)
@@ -110,14 +110,20 @@ while True:
         # ...
 
         # Draw Start-Button
-        pygame.draw.rect(screen, BUTTON_COLOR,
-                         (SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2,
-                           SCREEN_HEIGHT // 2 - BUTTON_HEIGHT // 2,
-                             BUTTON_WIDTH, BUTTON_HEIGHT))
+        pygame.draw.rect(
+            screen,
+            BUTTON_COLOR,
+            (
+                SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2,
+                SCREEN_HEIGHT // 2 - BUTTON_HEIGHT // 2,
+                BUTTON_WIDTH,
+                BUTTON_HEIGHT,
+            ),
+        )
         screen.blit(text_surface, text_rect)
 
-    Player.x += 10*x_dir
-    Player.y += 10*y_dir
+    Player.x += 10 * x_dir
+    Player.y += 10 * y_dir
 
     pygame.display.flip()  # Refresh on-screen display
-    clock.tick(60)         # wait until next frame (at 60 FPS)
+    clock.tick(60)  # wait until next frame (at 60 FPS)
