@@ -10,23 +10,19 @@ class arena:
         self.tiles = self.load_arena(filename)
         print(self.tiles)
 
-
-    mapping = {"n": pygame.Color('lightyellow'),
-               "g": pygame.Color('purple'),
-               "b": pygame.Color('blue'),
-               "y": pygame.Color('yellow'),
-               "r": pygame.Color('red'),
-               "x": pygame.Color('black'),
-               "o": pygame.Color('orange')}
-
+    mapping = {"n": pygame.image.load('img/Blue_Brick.png'),
+               "g": pygame.image.load('img/purple2.png'),
+               "b": pygame.image.load('img/water3.png'),
+               "y": pygame.image.load('img/sand.png'),
+               "r": pygame.image.load('img/fire.png'),
+               "x": pygame.image.load('img/black.png'),
+               "o": pygame.image.load('img/orange_fire.png')}
 
     def draw(self, screen):
         for i in range(0, len(self.tiles)):
             for j in range(0, len(self.tiles[i])):
-                pygame.draw.rect(screen, self.tiles[i][j],
-                                 (j * self.tileheight,
-                                  i * self.tilewidth,
-
+                screen.blit(self.tiles[i][j],
+                            (j * self.tilewidth, i * self.tileheight))
 
     def load_arena(self, filename):
         tiles = []
