@@ -33,7 +33,7 @@ text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2,
                                           SCREEN_HEIGHT // 2))
 
 # Arena
-Arena = arena(1000, 1000, 50, 50)
+Arena = arena(1000, 1000, 50, 50, "map_Lvl_1.txt")
 
 # Player
 Player = BasicRobot("lightblue", 640, 500, 30, 45)
