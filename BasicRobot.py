@@ -11,19 +11,20 @@ class BasicRobot:
         self.alpha = math.radians(alpha)
 
         # movement attributes
-        self.a = 0
-        self.a_alpha = 0
+        self.a = 0.1
+        self.a_alpha = 0.001
         self.v = 0
         self.v_alpha = 0
 
-        self.a_max = 5
-        self.a_alpha_max = 2
+        self.a_max = 10
+        self.a_alpha_max = 0.01
 
     def draw(self, screen):
         pygame.draw.circle(screen, self.color, (self.x, self.y), self.r)
         pygame.draw.circle(screen, "black", (self.x, self.y), self.r, width=1)
 
-    def update(self, screen):
+    def update(self, screen, player):
+
         # update speed
         self.v += self.a
 
@@ -37,36 +38,47 @@ class BasicRobot:
         self.v_alpha = max(-self.a_alpha_max, min(self.v_alpha,
                                                   self.a_alpha_max))
 
-        # update position
-        self.x += self.v * math.cos(math.radians(self.alpha))
-        self.y += self.v * math.sin(math.radians(self.alpha))
-        self.alpha += self.v_alpha
-
-        # handle reaching the edges of the screen
-        if self.x < self.r or self.x > 1000 - self.r:
-            self.v = 0
-            self.a *= -1
-        if self.y < self.r or self.y > 720 - self.r:
-            self.v = 0
-            self.a *= -1
-
-        self.handle_user_input()
-
-        self.Cannon = Cannon(self.x, self.y)
-        self.Cannon.update(self.alpha, screen)
-
-    def handle_user_input(self):
-        # Based on the input, modify the acceleration (a) and rotational
-        # acceleration (a_alpha) of the robots
+        # User Input
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
-            self.a_alpha = -0.2  # Set negative acceleration to move left
+            if self.x > self.r:
+                self.x -= self.v  # move left
         elif keys[pygame.K_RIGHT]:
-            self.a = 0.2
+            if self.x < 1000 - self.r:
+                self.x += self.v   # move right
         elif keys[pygame.K_UP]:
-            self.a = 0.5
+            if self.y > self.r:
+                self.y -= self.v  # move up
         elif keys[pygame.K_DOWN]:
-            self.a_alpha = 0.2  # Set positive
+            if self.y < 720 - self.r:
+                self.y += self.v  # move down
+        elif keys[pygame.K_u]:
+            self.a_alpha += 0.001
+        elif keys[pygame.K_j]:
+            self.a_alpha -= 0.001
+        elif keys[pygame.K_i]:
+            self.a += 0.001
+        elif keys[pygame.K_k]:
+            self.a -= 0.001
+
+        # Vektor vom Objekt zur Maus
+        dx = player.x - self.x
+        dy = player.y - self.y
+
+        # Winkel berechnen
+        angle_rad = math.atan2(dy, dx)
+        # angle_deg = math.degrees(angle_rad)
+
+        if angle_rad - self.alpha > 0.01:
+            self.alpha += self.v_alpha
+        elif angle_rad - self.alpha < -0.01:
+            self.alpha -= self.v_alpha
+        else:
+            self.alpha += 0
+
+        # Cannon for a Robot
+        self.Cannon = Cannon(self.x, self.y)
+        self.Cannon.update(self.alpha, screen)
 
 
 class Cannon:

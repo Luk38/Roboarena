@@ -41,9 +41,9 @@ PlayerCannon = Cannon(Player.x, Player.y)
 
 # Robots
 Robot1 = BasicRobot("yellow", 100, 50, 30, 0)
-Robot2 = BasicRobot("red", 190, 50, 30, 0)
-Robot3 = BasicRobot("darkred", 270, 50, 30, 0)
-Robot4 = BasicRobot("black", 360, 50, 30, 0)
+Robot2 = BasicRobot("red", 190, 200, 30, 0)
+Robot3 = BasicRobot("darkred", 270, 600, 30, 0)
+Robot4 = BasicRobot("black", 360, 60, 30, 0)
 
 # Movement directions
 x_dir = 0
@@ -98,10 +98,10 @@ while True:
         Robot2.draw(screen)
         Robot3.draw(screen)
         Robot4.draw(screen)
-        Robot1.update(screen)
-        Robot2.update(screen)
-        Robot3.update(screen)
-        Robot4.update(screen)
+        Robot1.update(screen, Player)
+        Robot2.update(screen, Player)
+        Robot3.update(screen, Player)
+        Robot4.update(screen, Player)
 
     else:
         # Do logical updates here.
@@ -125,8 +125,8 @@ while True:
         )
         screen.blit(text_surface, text_rect)
 
-    Player.x += 10 * x_dir
-    Player.y += 10 * y_dir
+    Player.x += 5 * x_dir
+    Player.y += 5 * y_dir
 
     pygame.display.flip()  # Refresh on-screen display
     clock.tick(60)  # wait until next frame (at 60 FPS)
