@@ -1,6 +1,6 @@
 import pygame
 from arena import arena
-from BasicRobot import BasicRobot
+from BasicRobot import BasicRobot, Cannon
 
 pygame.init()
 
@@ -29,13 +29,15 @@ BUTTON_TEXT_COLOR = "purple"
 # Font
 font = pygame.font.Font(None, 36)
 text_surface = font.render(BUTTON_TEXT, True, BUTTON_TEXT_COLOR)
-text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2,
+                                          SCREEN_HEIGHT // 2))
 
 # Arena
 Arena = arena(1000, 1000, 50, 50)
 
 # Player
-Player = BasicRobot("lightblue", 640, 500, 20, 45)
+Player = BasicRobot("lightblue", 640, 500, 30, 45)
+PlayerCannon = Cannon(Player.x, Player.y)
 
 # Robots
 Robot1 = BasicRobot("yellow", 100, 50, 30, 0)
@@ -90,15 +92,16 @@ while True:
         # Render the graphics here.
         # ...
         Player.draw(screen)
+        PlayerCannon.playercannon(Player.x, Player.y, screen)
 
         Robot1.draw(screen)
         Robot2.draw(screen)
         Robot3.draw(screen)
         Robot4.draw(screen)
-        Robot1.update()
-        Robot2.update()
-        Robot3.update()
-        Robot4.update()
+        Robot1.update(screen)
+        Robot2.update(screen)
+        Robot3.update(screen)
+        Robot4.update(screen)
 
     else:
         # Do logical updates here.
