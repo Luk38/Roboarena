@@ -1,7 +1,6 @@
 import pygame
-import math
 from arena import arena
-from BasicRobot import *
+from BasicRobot import BasicRobot, Cannon
 
 pygame.init()
 
@@ -30,7 +29,8 @@ BUTTON_TEXT_COLOR = "purple"
 # Font
 font = pygame.font.Font(None, 36)
 text_surface = font.render(BUTTON_TEXT, True, BUTTON_TEXT_COLOR)
-text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2,
+                                          SCREEN_HEIGHT // 2))
 
 # Arena
 Arena = arena(1000, 1000, 50, 50)
@@ -38,7 +38,6 @@ Arena = arena(1000, 1000, 50, 50)
 # Player
 Player = BasicRobot("lightblue", 640, 500, 30, 45)
 PlayerCannon = Cannon(Player.x, Player.y)
-
 
 # Robots
 Robot1 = BasicRobot("yellow", 100, 50, 30, 0)

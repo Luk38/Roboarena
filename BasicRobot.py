@@ -34,7 +34,8 @@ class BasicRobot:
         self.v_alpha += self.a_alpha
 
         # turning speed limit
-        self.v_alpha = max(-self.a_alpha_max, min(self.v_alpha, self.a_alpha_max))
+        self.v_alpha = max(-self.a_alpha_max, min(self.v_alpha,
+                                                  self.a_alpha_max))
 
         # update position
         self.x += self.v * math.cos(math.radians(self.alpha))
@@ -55,7 +56,8 @@ class BasicRobot:
         self.Cannon.update(self.alpha, screen)
 
     def handle_user_input(self):
-        # Based on the input, modify the acceleration (a) and rotational acceleration (a_alpha) of the robots
+        # Based on the input, modify the acceleration (a) and rotational
+        # acceleration (a_alpha) of the robots
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
             self.a_alpha = -0.2  # Set negative acceleration to move left
