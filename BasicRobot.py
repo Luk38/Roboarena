@@ -23,7 +23,7 @@ class BasicRobot:
         pygame.draw.circle(screen, self.color, (self.x, self.y), self.r)
         pygame.draw.circle(screen, "black", (self.x, self.y), self.r, width=1)
 
-    def update(self):
+    def update(self, screen):
         # update speed
         self.v += self.a
 
@@ -51,6 +51,9 @@ class BasicRobot:
 
         self.handle_user_input()
 
+        self.Cannon = Cannon(self.x, self.y)
+        self.Cannon.update(self.alpha, screen)
+
     def handle_user_input(self):
         # Based on the input, modify the acceleration (a) and rotational acceleration (a_alpha) of the robots
         keys = pygame.key.get_pressed()
@@ -62,3 +65,37 @@ class BasicRobot:
             self.a = 0.5
         elif keys[pygame.K_DOWN]:
             self.a_alpha = 0.2  # Set positive
+
+
+class Cannon:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.image = pygame.image.load("img/Assets/cannon.png")
+        self.image = pygame.transform.scale(
+            self.image, (28, 240)
+        )  # Skaliere das Bild auf eine geeignete Größe
+        self.image_rect = self.image.get_rect(topleft=(self.x, self.y))
+
+    def update(self, alpha, screen):
+        angle = math.degrees(alpha)
+        rotated_image = pygame.transform.rotate(self.image, -angle - 90)
+        rotated_rect = rotated_image.get_rect(center=(self.x, self.y))
+        screen.blit(rotated_image, rotated_rect.topleft)
+
+    def playercannon(self, x, y, screen):
+        # Mausposition abrufen
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+
+        # Vektor vom Objekt zur Maus
+        dx = mouse_x - x
+        dy = mouse_y - y
+
+        # Winkel berechnen
+        angle_rad = math.atan2(dy, dx)
+        angle_deg = math.degrees(angle_rad)
+
+        # Bild rotieren
+        rotated_image = pygame.transform.rotate(self.image, -angle_deg - 90)
+        rotated_rect = rotated_image.get_rect(center=(x, y))
+        screen.blit(rotated_image, rotated_rect.topleft)
