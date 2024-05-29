@@ -26,8 +26,6 @@ class arena:
                 pygame.draw.rect(screen, self.tiles[i][j],
                                  (j * self.tileheight,
                                   i * self.tilewidth,
-                                  self.tilewidth,
-                                  self.tileheight))
 
 
     def load_arena(self, filename):
