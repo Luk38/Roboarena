@@ -37,8 +37,8 @@ class arena:
     def draw(self, screen):
         for i in range(0, len(self.Tiles)):
             for j in range(0, len(self.Tiles[i])):
-                pygame.draw.rect(screen, self.Tiles[i][j], 
-                                 (j*self.tileheight, 
-                                  i*self.tilewidth, 
-                                  self.tilewidth, 
+                pygame.draw.rect(screen, self.Tiles[i][j],
+                                 (j*self.tileheight,
+                                  i*self.tilewidth,
+                                  self.tilewidth,
                                   self.tileheight))
