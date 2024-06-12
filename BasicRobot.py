@@ -1,9 +1,10 @@
 import pygame
 import math
+from typing import Type
 
 
 class BasicRobot:
-    def __init__(self, color, x, y, r, alpha):
+    def __init__(self, color: str, x: int, y: int, r: int, alpha: int):
         self.color = color
         self.x = x
         self.y = y
@@ -19,11 +20,12 @@ class BasicRobot:
         self.a_max = 10
         self.a_alpha_max = 0.01
 
-    def draw(self, screen):
+    # Draw Robot on the screen
+    def draw(self, screen: pygame.Surface):
         pygame.draw.circle(screen, self.color, (self.x, self.y), self.r)
         pygame.draw.circle(screen, "black", (self.x, self.y), self.r, width=1)
 
-    def update(self, screen, player):
+    def update(self, screen: pygame.Surface, player: Type["BasicRobot"]):
 
         # update speed
         self.v += self.a
@@ -82,7 +84,7 @@ class BasicRobot:
 
 
 class Cannon:
-    def __init__(self, x, y):
+    def __init__(self, x: int, y: int):
         self.x = x
         self.y = y
         self.image = pygame.image.load("img/Assets/cannon.png")
@@ -91,13 +93,13 @@ class Cannon:
         )  # Skaliere das Bild auf eine geeignete Größe
         self.image_rect = self.image.get_rect(topleft=(self.x, self.y))
 
-    def update(self, alpha, screen):
+    def update(self, alpha: int, screen: pygame.Surface):
         angle = math.degrees(alpha)
         rotated_image = pygame.transform.rotate(self.image, -angle - 90)
         rotated_rect = rotated_image.get_rect(center=(self.x, self.y))
         screen.blit(rotated_image, rotated_rect.topleft)
 
-    def playercannon(self, x, y, screen):
+    def playercannon(self, x: int, y: int, screen: pygame.Surface):
         # Mausposition abrufen
         mouse_x, mouse_y = pygame.mouse.get_pos()
 
