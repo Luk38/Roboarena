@@ -18,19 +18,17 @@ clock = pygame.time.Clock()
 
 # Variable if game active
 game_active = False
+settings_active = False
 
-# Button
-BUTTON_WIDTH = 200
-BUTTON_HEIGHT = 100
-BUTTON_COLOR = "white"
-BUTTON_TEXT = "Start Game"
-BUTTON_TEXT_COLOR = "purple"
-
-# Font
-font = pygame.font.Font(None, 36)
-text_surface = font.render(BUTTON_TEXT, True, BUTTON_TEXT_COLOR)
-text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2,
-                                          SCREEN_HEIGHT // 2))
+# load buttons
+start_button_surface = pygame.image.load("img/Menu-images/startbutton.png")
+start_button_surface = pygame.transform.scale_by(start_button_surface, 0.5)
+settings_button_surface = pygame.image.load(
+    "img/Menu-images/settingsbutton.png")
+settings_button_surface = pygame.transform.scale_by(
+    settings_button_surface, 0.5)
+quit_button_surface = pygame.image.load("img/Menu-images/quitbutton.png")
+quit_button_surface = pygame.transform.scale_by(quit_button_surface, 0.5)
 
 # Arena
 Arena = arena(1000, 1000, 50, 50, "map_Lvl_1.txt")
@@ -64,6 +62,9 @@ while True:
                 y_dir = 1
             elif event.key == pygame.K_d:
                 x_dir = 1
+            elif event.key == pygame.K_ESCAPE:
+                game_active = False
+                settings_active = False
 
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_w:
@@ -80,13 +81,11 @@ while True:
         # handler for mouse button
         if event.type == pygame.MOUSEBUTTONDOWN:
             print("Mouse Button pressed")
-            if text_rect.collidepoint(event.pos):
-                game_active = True
 
     if game_active:
         # Do logical updates here.
         # ...
-
+        pygame.display.set_caption("Roboarena")
         screen.fill("light yellow")  # Fill the display with a solid color
         Arena.draw(screen)
         # Render the graphics here.
@@ -102,28 +101,40 @@ while True:
         Robot2.update(screen, Player)
         Robot3.update(screen, Player)
         Robot4.update(screen, Player)
-
-    else:
+    elif settings_active:
+        pygame.display.set_caption("Settings")
+        screen.fill("black")
+    elif not game_active and not settings_active:
         # Do logical updates here.
         # ...
-
-        screen.fill("purple")  # Fill the display with a solid color
-
+        pygame.display.set_caption("Main Menu")
         # Render the graphics here.
         # ...
+        screen.fill("grey")  # Fill the display with a solid color
 
-        # Draw Start-Button
-        pygame.draw.rect(
-            screen,
-            BUTTON_COLOR,
-            (
-                SCREEN_WIDTH // 2 - BUTTON_WIDTH // 2,
-                SCREEN_HEIGHT // 2 - BUTTON_HEIGHT // 2,
-                BUTTON_WIDTH,
-                BUTTON_HEIGHT,
-            ),
-        )
+        text_font = pygame.font.Font(None, 100)
+        text_surface = text_font.render("Main Menu", True, "black")
+        text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2,
+                                          SCREEN_HEIGHT // 6))
         screen.blit(text_surface, text_rect)
+
+        start_button_rect = start_button_surface.get_rect(
+            center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 3))
+        screen.blit(start_button_surface, start_button_rect)
+        settings_button_rect = settings_button_surface.get_rect(
+            center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+        screen.blit(settings_button_surface, settings_button_rect)
+        quit_button_rect = quit_button_surface.get_rect(
+            center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 1.5))
+        screen.blit(quit_button_surface, quit_button_rect)
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            print("Mouse Button pressed")
+            if start_button_rect.collidepoint(event.pos):
+                game_active = True
+            elif settings_button_rect.collidepoint(event.pos):
+                settings_active = True
+            elif quit_button_rect.collidepoint(event.pos):
+                pygame.quit()
 
     Player.x += 5 * x_dir
     Player.y += 5 * y_dir
