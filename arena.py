@@ -2,7 +2,8 @@ import pygame
 
 
 class arena:
-    def __init__(self, height, width, tileheight, tilewidth, filename):
+    def __init__(self, height: int, width: int, tileheight: int, 
+                 tilewidth: int, filename: str):
         self.height = height
         self.width = width
         self.tileheight = tileheight
@@ -18,13 +19,13 @@ class arena:
                "x": pygame.image.load('img/black.png'),
                "o": pygame.image.load('img/orange_fire.png')}
 
-    def draw(self, screen):
+    def draw(self, screen: pygame.Surface):
         for i in range(0, len(self.tiles)):
             for j in range(0, len(self.tiles[i])):
                 screen.blit(self.tiles[i][j],
                             (j * self.tilewidth, i * self.tileheight))
 
-    def load_arena(self, filename):
+    def load_arena(self, filename: str):
         tiles = []
         with open(filename, 'r') as f:
             for line in f:
