@@ -2,7 +2,7 @@ import pygame
 
 
 class arena:
-    def __init__(self, height: int, width: int, tileheight: int, 
+    def __init__(self, height: int, width: int, tileheight: int,
                  tilewidth: int, filename: str):
         self.height = height
         self.width = width
