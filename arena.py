@@ -19,6 +19,18 @@ class arena:
                "x": pygame.image.load('img/black.png'),
                "o": pygame.image.load('img/orange_fire.png')}
 
+    collision_tiles = {"g", "x"}
+
+    def is_collision(self, x: int, y: int):
+        tile_x = x // self.tilewidth
+        tile_y = y // self.tileheight
+
+        if tile_x < 0 or tile_x >= self.width or tile_y < 0 or tile_y >= self.height:
+            return True  # Außerhalb der Arena
+
+        tile_type = self.tiles[tile_y][tile_x]
+        return tile_type in collision_tiles
+
     def draw(self, screen: pygame.Surface):
         for i in range(0, len(self.tiles)):
             for j in range(0, len(self.tiles[i])):
