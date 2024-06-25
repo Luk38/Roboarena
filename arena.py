@@ -1,33 +1,24 @@
 import pygame
+from sprites import Sprite, CollisionSprite
+from pytmx.util_pygame import load_pygame
 
 
 class arena:
-    def __init__(self, height: int, width: int, tileheight: int,
-                 tilewidth: int, filename: str):
-        self.height = height
-        self.width = width
-        self.tileheight = tileheight
-        self.tilewidth = tilewidth
-        self.tiles = self.load_arena(filename)
-        print(self.tiles)
+    def __init__(self, all_sprites, collision_sprites, map, tile_size):
+        self.map = map
+        self.tilesize = tile_size
+        self.all_sprites = all_sprites
+        self.collision_sprites = collision_sprites
 
-    mapping = {"n": pygame.image.load('img/Blue_Brick.png'),
-               "g": pygame.image.load('img/purple2.png'),
-               "b": pygame.image.load('img/water3.png'),
-               "y": pygame.image.load('img/sand.png'),
-               "r": pygame.image.load('img/fire.png'),
-               "x": pygame.image.load('img/black.png'),
-               "o": pygame.image.load('img/orange_fire.png')}
-
-    def draw(self, screen: pygame.Surface):
-        for i in range(0, len(self.tiles)):
-            for j in range(0, len(self.tiles[i])):
-                screen.blit(self.tiles[i][j],
-                            (j * self.tilewidth, i * self.tileheight))
-
-    def load_arena(self, filename: str):
-        tiles = []
-        with open(filename, 'r') as f:
-            for line in f:
-                tiles.append(list(map(self.mapping.get, list(line.strip()))))
-        return tiles
+    def setup(self):
+        map = load_pygame('Maps/Wasteland_Map/Roboarena_Wasteland.tmx')
+        for x, y, image in map.get_layer_by_name('Kachelebene').tiles():
+            Sprite((x * self.tilesize, y * self.tilesize),
+                   image, self.all_sprites)
+        for x, y, image in map.get_layer_by_name('Deko').tiles():
+            Sprite((x * self.tilesize, y * self.tilesize),
+                   image, self.all_sprites)
+        for obj in map.get_layer_by_name('Objektebene'):
+            CollisionSprite((obj.x, obj.y),
+                            pygame.Surface((obj.width, obj.height)),
+                            self.collision_sprites)

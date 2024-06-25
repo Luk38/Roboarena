@@ -64,8 +64,8 @@ class BasicRobot:
             self.a -= 0.001
 
         # Vektor vom Objekt zur Maus
-        dx = player.x - self.x
-        dy = player.y - self.y
+        dx = player.rect.centerx - self.x
+        dy = player.rect.centery - self.y
 
         # Winkel berechnen
         angle_rad = math.atan2(dy, dx)
@@ -91,6 +91,7 @@ class Cannon:
         self.image = pygame.transform.scale(
             self.image, (28, 240)
         )  # Skaliere das Bild auf eine geeignete Größe
+        self.image = pygame.transform.scale_by(self.image, 0.65)
         self.image_rect = self.image.get_rect(topleft=(self.x, self.y))
 
     def update(self, alpha: int, screen: pygame.Surface):
