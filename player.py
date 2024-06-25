@@ -6,6 +6,7 @@ class Player(pygame.sprite.Sprite):
         super().__init__(groups)
         self.image = pygame.image.load("img/Assets/player.png")
         self.rect = self.image.get_rect(center=pos)
+        self.hitbox_rect = self.rect.inflate(-30, 0)
 
         # movement
         self.vel = 5
@@ -14,17 +15,17 @@ class Player(pygame.sprite.Sprite):
 
     def collision(self, direction):
         for sprite in self.collision_sprites:
-            if sprite.rect.colliderect(self.rect):
+            if sprite.rect.colliderect(self.hitbox_rect):
                 if (direction == "horizontal"):
                     if self.dir.x > 0:
-                        self.rect.right = sprite.rect.left
+                        self.hitbox_rect.right = sprite.rect.left
                     elif self.dir.x < 0:
-                        self.rect.left = sprite.rect.right
+                        self.hitbox_rect.left = sprite.rect.right
                 else:
                     if self.dir.y < 0:
-                        self.rect.top = sprite.rect.bottom
+                        self.hitbox_rect.top = sprite.rect.bottom
                     elif self.dir.y > 0:
-                        self.rect.bottom = sprite.rect.top
+                        self.hitbox_rect.bottom = sprite.rect.top
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -32,10 +33,11 @@ class Player(pygame.sprite.Sprite):
         self.dir.y = int(keys[pygame.K_s]) - int(keys[pygame.K_w])
 
     def movement(self):
-        self.rect.x += self.dir.x * self.vel
+        self.hitbox_rect.x += self.dir.x * self.vel
         self.collision("horizontal")
-        self.rect.y += self.dir.y * self.vel
+        self.hitbox_rect.y += self.dir.y * self.vel
         self.collision("vertical")
+        self.rect.center = self.hitbox_rect.center
 
     def update(self):
         self.input()

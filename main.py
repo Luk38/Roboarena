@@ -41,6 +41,7 @@ collision_sprites = pygame.sprite.Group()
 # Old_arena = old_arena(1000, 1000, 50, 50, "map_Lvl_1.txt")
 Wasteland_arena = arena(all_sprites, collision_sprites,
                         "Maps/Wasteland_Map/Roboarena_Wasteland.tmx", 16)
+Wasteland_arena.setup()
 
 # Player
 player = Player((400, 300), all_sprites, collision_sprites)
@@ -101,7 +102,6 @@ while True:
         # Render the graphics here.
         # ...
         # Old_arena.draw(screen)
-        Wasteland_arena.setup()
 
         all_sprites.draw(screen)
         PlayerCannon.playercannon(player.rect.centerx, player.rect.centery,
