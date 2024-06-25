@@ -1,9 +1,9 @@
 import pygame
 from player import Player
-from sprites import CollisionSprite
+# from arena_old import old_arena
 from arena import arena
 from BasicRobot import BasicRobot, Cannon
-from random import randint
+
 
 pygame.init()
 
@@ -38,13 +38,9 @@ all_sprites = pygame.sprite.Group()
 collision_sprites = pygame.sprite.Group()
 
 # Arena
-Arena = arena(1000, 1000, 50, 50, "map_Lvl_1.txt")
-
-# Sprites
-for i in range(6):
-    x, y = randint(0, SCREEN_WIDTH), randint(0, SCREEN_HEIGHT)
-    w, h = randint(60, 100), randint(50, 100)
-    CollisionSprite((x, y), (w, h), (all_sprites, collision_sprites))
+# Old_arena = old_arena(1000, 1000, 50, 50, "map_Lvl_1.txt")
+Wasteland_arena = arena(all_sprites, collision_sprites,
+                        "Maps/Wasteland_Map/Roboarena_Wasteland.tmx", 16)
 
 # Player
 player = Player((400, 300), all_sprites, collision_sprites)
@@ -104,10 +100,12 @@ while True:
         all_sprites.update()
         # Render the graphics here.
         # ...
-        Arena.draw(screen)
+        # Old_arena.draw(screen)
+        Wasteland_arena.setup()
 
         all_sprites.draw(screen)
-        PlayerCannon.playercannon(player.rect.centerx, player.rect.centery, screen)
+        PlayerCannon.playercannon(player.rect.centerx, player.rect.centery,
+                                  screen)
 
         Robot1.draw(screen)
         Robot2.draw(screen)
@@ -153,4 +151,4 @@ while True:
                 pygame.quit()
 
     pygame.display.flip()  # Refresh on-screen display
-    clock.tick(60)  # wait until next frame (at 60 FPS)
+    clock.tick(120)  # wait until next frame (at 60 FPS)

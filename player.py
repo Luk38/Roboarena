@@ -6,7 +6,6 @@ class Player(pygame.sprite.Sprite):
         super().__init__(groups)
         self.image = pygame.image.load("img/Assets/player.png")
         self.rect = self.image.get_rect(center=pos)
-        self.hitbox_rect = self.rect.inflate(-40, 0)
 
         # movement
         self.vel = 5
@@ -31,7 +30,6 @@ class Player(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         self.dir.x = int(keys[pygame.K_d]) - int(keys[pygame.K_a])
         self.dir.y = int(keys[pygame.K_s]) - int(keys[pygame.K_w])
-        self.dir = self.dir.normalize() if self.dir else self.dir
 
     def movement(self):
         self.rect.x += self.dir.x * self.vel
