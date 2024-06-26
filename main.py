@@ -3,7 +3,7 @@ from player import Player
 # from arena_old import old_arena
 from arena import arena
 from BasicRobot import BasicRobot, Cannon
-
+from groups import AllSprites
 
 pygame.init()
 
@@ -34,17 +34,17 @@ quit_button_surface = pygame.image.load("img/Menu-images/quitbutton.png")
 quit_button_surface = pygame.transform.scale_by(quit_button_surface, 0.5)
 
 # groups
-all_sprites = pygame.sprite.Group()
+all_sprites = AllSprites()
 collision_sprites = pygame.sprite.Group()
 
 # Arena
 # Old_arena = old_arena(1000, 1000, 50, 50, "map_Lvl_1.txt")
 Wasteland_arena = arena(all_sprites, collision_sprites,
-                        "Maps/Wasteland_Map/Roboarena_Wasteland.tmx", 16)
+                        "Maps/Wasteland_Map/Roboarena_Wasteland.tmx", 32)
 Wasteland_arena.setup()
 
 # Player
-player = Player((400, 300), all_sprites, collision_sprites)
+player = Player((700, 300), all_sprites, collision_sprites)
 PlayerCannon = Cannon(player.rect.x, player.rect.y)
 
 # Robots
@@ -103,18 +103,19 @@ while True:
         # ...
         # Old_arena.draw(screen)
 
-        all_sprites.draw(screen)
-        PlayerCannon.playercannon(player.rect.centerx, player.rect.centery,
+        all_sprites.draw(player.rect.center)
+        PlayerCannon.playercannon(SCREEN_WIDTH/2, SCREEN_HEIGHT/2,
                                   screen)
 
-        Robot1.draw(screen)
-        Robot2.draw(screen)
-        Robot3.draw(screen)
-        Robot4.draw(screen)
-        Robot1.update(screen, player)
-        Robot2.update(screen, player)
-        Robot3.update(screen, player)
-        Robot4.update(screen, player)
+        # Robot1.draw(screen)
+        # Robot2.draw(screen)
+        # Robot3.draw(screen)
+        # Robot4.draw(screen)
+        # Robot1.update(screen, player)
+        # Robot2.update(screen, player)
+        # Robot3.update(screen, player)
+        # Robot4.update(screen, player)
+
     elif settings_active:
         pygame.display.set_caption("Settings")
         screen.fill("black")
