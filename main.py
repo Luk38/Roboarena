@@ -39,12 +39,16 @@ collision_sprites = pygame.sprite.Group()
 
 # Arena
 # Old_arena = old_arena(1000, 1000, 50, 50, "map_Lvl_1.txt")
+# Wasteland_arena = arena(all_sprites, collision_sprites,
+# "Maps/Wasteland_Map/Roboarena_Wasteland.tmx", 32)
+# Wasteland_arena.setup()
+
 Wasteland_arena = arena(all_sprites, collision_sprites,
-                        "Maps/Wasteland_Map/Roboarena_Wasteland.tmx", 32)
+                        "Maps/Toxic_Map/Roboarena_Toxic.tmx", 32)
 Wasteland_arena.setup()
 
 # Player
-player = Player((700, 300), all_sprites, collision_sprites)
+player = Player((1500, 800), all_sprites, collision_sprites)
 PlayerCannon = Cannon(player.rect.x, player.rect.y)
 
 # Robots

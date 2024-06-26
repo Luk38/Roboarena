@@ -12,6 +12,10 @@ class arena:
 
     def setup(self):
         map = load_pygame(self.map)
+        for x, y, image in map.get_layer_by_name('Hintergrund').tiles():
+            image = pygame.transform.scale_by(image, 2)
+            Sprite((x * self.tilesize, y * self.tilesize),
+                   image, self.all_sprites)
         for x, y, image in map.get_layer_by_name('Kachelebene').tiles():
             image = pygame.transform.scale_by(image, 2)
             Sprite((x * self.tilesize, y * self.tilesize),
