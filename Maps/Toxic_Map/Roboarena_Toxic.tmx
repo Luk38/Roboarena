@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="70" height="70" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="23">
- <tileset firstgid="1" source="../Ground_rocks.tsx"/>
- <tileset firstgid="1148" source="../Water_coasts.tsx"/>
- <tileset firstgid="2204" source="../water_detilazation.tsx"/>
- <tileset firstgid="3752" source="../../ashlands_tileset.tsx"/>
- <tileset firstgid="4592" source="../Objects.tsx"/>
- <tileset firstgid="6704" source="../Details.tsx"/>
+ <tileset firstgid="1" source="Ground_rocks.tsx"/>
+ <tileset firstgid="1148" source="Water_coasts.tsx"/>
+ <tileset firstgid="2204" source="water_detilazation.tsx"/>
+ <tileset firstgid="3752" source="ashlands_tileset.tsx"/>
+ <tileset firstgid="4592" source="Objects.tsx"/>
+ <tileset firstgid="6704" source="Details.tsx"/>
  <layer id="2" name="Wasser" width="70" height="70">
   <data encoding="csv">
 3994,3994,3994,3994,3994,3994,3994,3994,3877,3877,3994,3994,3994,3994,3994,3994,3994,3994,3994,3994,3994,3994,3994,3994,3994,3994,3994,3994,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,4159,

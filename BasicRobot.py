@@ -89,7 +89,7 @@ class Cannon:
         self.y = y
         self.image = pygame.image.load("img/Assets/cannon.png")
         self.image = pygame.transform.scale(
-            self.image, (28, 240)
+            self.image, (14, 120)
         )  # Skaliere das Bild auf eine geeignete Größe
         self.image = pygame.transform.scale_by(self.image, 0.65)
         self.image_rect = self.image.get_rect(topleft=(self.x, self.y))

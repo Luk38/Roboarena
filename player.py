@@ -5,11 +5,12 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, pos, groups, collision_sprites):
         super().__init__(groups)
         self.image = pygame.image.load("img/Assets/player.png")
+        self.image = pygame.transform.scale_by(self.image, 0.5)
         self.rect = self.image.get_rect(center=pos)
-        self.hitbox_rect = self.rect.inflate(-30, 0)
+        self.hitbox_rect = self.rect.inflate(-20, 0)
 
         # movement
-        self.vel = 5
+        self.vel = 1
         self.dir = pygame.Vector2()
         self.collision_sprites = collision_sprites
 
