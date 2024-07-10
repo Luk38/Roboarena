@@ -28,3 +28,7 @@ class arena:
             CollisionSprite((obj.x*2, obj.y*2),
                             pygame.Surface((obj.width*2, obj.height*2)),
                             self.collision_sprites)
+        self.spawn_positions = []
+        for obj in map.get_layer_by_name('Entitäten'):
+            if obj.name == 'Enemy':
+                self.spawn_positions.append((obj.x*2, obj.y*2))
