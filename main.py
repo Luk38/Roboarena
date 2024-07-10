@@ -149,7 +149,7 @@ while True:
                         sprite.destroy()
                         score += 1
 
-        # update the score           
+        # update the score
         score_surface = score_font.render(f"Score: {score}", True, BLACK)
         score_sprite.image = score_surface
         score_sprite.rect.center = player.rect.center + pygame.Vector2(
