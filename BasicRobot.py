@@ -91,7 +91,7 @@ class Cannon:
         self.image = pygame.transform.scale(
             self.image, (14, 120)
         )  # Skaliere das Bild auf eine geeignete Größe
-        self.image = pygame.transform.scale_by(self.image, 0.65)
+        self.image = pygame.transform.scale_by(self.image, 0.8)
         self.image_rect = self.image.get_rect(topleft=(self.x, self.y))
 
     def update(self, alpha: int, screen: pygame.Surface):

@@ -4,13 +4,15 @@ import pygame
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, groups, collision_sprites):
         super().__init__(groups)
-        self.image = pygame.image.load("img/Assets/player.png")
-        self.image = pygame.transform.scale_by(self.image, 0.5)
+        self.surf = pygame.image.load("img/Assets/Hull_08.png")
+        self.surf = pygame.transform.scale_by(self.surf, 0.25)
+        self.image = self.surf
+        self.pos = pos
         self.rect = self.image.get_rect(center=pos)
         self.hitbox_rect = self.rect.inflate(-20, 0)
 
         # movement
-        self.vel = 2
+        self.vel = 5
         self.dir = pygame.Vector2()
         self.collision_sprites = collision_sprites
 
@@ -34,6 +36,25 @@ class Player(pygame.sprite.Sprite):
         self.dir.y = int(keys[pygame.K_s]) - int(keys[pygame.K_w])
 
     def movement(self):
+        if self.dir.x != 0 or self.dir.y != 0:
+            if self.dir.y == 0:
+                self.current_angle = 90 * -self.dir.x
+            elif self.dir.y > 0 and self.dir.x == 0:
+                self.current_angle = 180
+            elif self.dir.y < 0 and self.dir.x == 0:
+                self.current_angle = 0
+            elif self.dir.y < 0 and self.dir.x < 0:
+                self.current_angle = 45
+            elif self.dir.y > 0 and self.dir.x < 0:
+                self.current_angle = 135
+            elif self.dir.y < 0 and self.dir.x > 0:
+                self.current_angle = -45
+            elif self.dir.y > 0 and self.dir.x > 0:
+                self.current_angle = -135
+
+            self.image = pygame.transform.rotate(self.surf, self.current_angle)
+            self.rect = self.image.get_rect(center=self.pos)
+
         self.hitbox_rect.x += self.dir.x * self.vel
         self.collision("horizontal")
         self.hitbox_rect.y += self.dir.y * self.vel
