@@ -86,6 +86,10 @@ class Enemy(pygame.sprite.Sprite):
                         self.hitbox_rect.bottom = enemy.hitbox_rect.top
                     self.dir.y = 0
 
+    def destroy(self):
+        # kill the enemy
+        self.kill
+
     def update(self):
         self.move()
         self.animate()
