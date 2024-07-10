@@ -2,8 +2,13 @@ import pygame
 from player import Player
 # from arena_old import old_arena
 from arena import arena
-from BasicRobot import BasicRobot, Cannon
+from BasicRobot import Cannon
 from groups import AllSprites
+from enemies import Enemy
+from random import choice
+from os.path import join
+from os import walk
+
 
 pygame.init()
 
@@ -36,6 +41,7 @@ quit_button_surface = pygame.transform.scale_by(quit_button_surface, 0.5)
 # groups
 all_sprites = AllSprites()
 collision_sprites = pygame.sprite.Group()
+enemy_sprites = pygame.sprite.Group()
 
 # Arena
 # Old_arena = old_arena(1000, 1000, 50, 50, "map_Lvl_1.txt")
@@ -48,21 +54,38 @@ Wasteland_arena = arena(all_sprites, collision_sprites,
 Wasteland_arena.setup()
 
 # Player
-player = Player((1500, 800), all_sprites, collision_sprites)
+player = Player((1500, 800), (all_sprites, collision_sprites),
+                collision_sprites)
 PlayerCannon = Cannon(player.rect.x, player.rect.y)
 
-# Robots
-Robot1 = BasicRobot("yellow", 100, 50, 30, 0)
-Robot2 = BasicRobot("red", 190, 200, 30, 0)
-Robot3 = BasicRobot("darkred", 270, 600, 30, 0)
-Robot4 = BasicRobot("black", 360, 60, 30, 0)
+# enemy spawn timer
+enemy_event = pygame.event.custom_type()
+pygame.time.set_timer(enemy_event, 8000)
+
+
+# load enemy images
+def load_images():
+    folders = list(walk(join('img', 'enemies')))[0][1]
+    enemy_frames = {}
+    for folder in folders:
+        for folder_path, _, file_names in walk(join('img', 'enemies', folder)):
+            enemy_frames[folder] = []
+            for file_name in sorted(file_names,
+                                    key=lambda name: int(name.split('.')[0])):
+                full_path = join(folder_path, file_name)
+                surf = pygame.image.load(full_path).convert_alpha()
+                enemy_frames[folder].append(surf)
+    return enemy_frames
+
+
+enemy_frames = load_images()
 
 # Movement directions
 x_dir = 0
 y_dir = 0
 
 while True:
-    # Process player inputs.
+    # Process player inputs. Event handler
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -95,6 +118,12 @@ while True:
         # handler for mouse button
         if event.type == pygame.MOUSEBUTTONDOWN:
             print("Mouse Button pressed")
+        # handler for enemy spawn event
+        if event.type == enemy_event:
+            Enemy(choice(Wasteland_arena.spawn_positions),
+                  choice(list(enemy_frames.values())),
+                  (all_sprites, enemy_sprites, collision_sprites),
+                  player, collision_sprites)
 
     if game_active:
         # Do logical updates here.
@@ -103,22 +132,15 @@ while True:
         screen.fill("light yellow")  # Fill the display with a solid color
         # update
         all_sprites.update()
+        load_images()
         # Render the graphics here.
         # ...
         # Old_arena.draw(screen)
 
+        # draw player and cannon
         all_sprites.draw(player.rect.center)
         PlayerCannon.playercannon(SCREEN_WIDTH/2, SCREEN_HEIGHT/2,
                                   screen)
-
-        # Robot1.draw(screen)
-        # Robot2.draw(screen)
-        # Robot3.draw(screen)
-        # Robot4.draw(screen)
-        # Robot1.update(screen, player)
-        # Robot2.update(screen, player)
-        # Robot3.update(screen, player)
-        # Robot4.update(screen, player)
 
     elif settings_active:
         pygame.display.set_caption("Settings")

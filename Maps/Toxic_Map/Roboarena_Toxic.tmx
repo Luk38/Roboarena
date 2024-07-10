@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="322">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="341">
  <tileset firstgid="1" source="Ground_rocks.tsx"/>
  <tileset firstgid="1148" source="Water_coasts.tsx"/>
  <tileset firstgid="2204" source="water_detilazation.tsx"/>
@@ -445,5 +445,61 @@
   <object id="318" x="695.5" y="272" width="8" height="22.75"/>
   <object id="319" x="703.75" y="279" width="11.5" height="17.75"/>
   <object id="320" x="992.5" y="419" width="30" height="10.5"/>
+ </objectgroup>
+ <objectgroup id="6" name="Entitäten">
+  <object id="323" name="Enemy" x="592" y="446.667">
+   <point/>
+  </object>
+  <object id="324" name="Enemy" x="374.667" y="545.333">
+   <point/>
+  </object>
+  <object id="325" name="Enemy" x="460" y="702.667">
+   <point/>
+  </object>
+  <object id="326" name="Enemy" x="337.333" y="762.667">
+   <point/>
+  </object>
+  <object id="327" name="Enemy" x="465.333" y="920">
+   <point/>
+  </object>
+  <object id="328" name="Enemy" x="356" y="1042.67">
+   <point/>
+  </object>
+  <object id="329" name="Enemy" x="468" y="1206.67">
+   <point/>
+  </object>
+  <object id="330" name="Enemy" x="680" y="1229.33">
+   <point/>
+  </object>
+  <object id="331" name="Enemy" x="918.667" y="1226.67">
+   <point/>
+  </object>
+  <object id="332" name="Enemy" x="902.667" y="1070.67">
+   <point/>
+  </object>
+  <object id="333" name="Enemy" x="1173.33" y="961.333">
+   <point/>
+  </object>
+  <object id="334" name="Enemy" x="1064" y="878.667">
+   <point/>
+  </object>
+  <object id="335" name="Enemy" x="1170.67" y="681.333">
+   <point/>
+  </object>
+  <object id="336" name="Enemy" x="1053.33" y="689.333">
+   <point/>
+  </object>
+  <object id="337" name="Enemy" x="965.333" y="530.667">
+   <point/>
+  </object>
+  <object id="338" name="Enemy" x="682.667" y="560">
+   <point/>
+  </object>
+  <object id="339" name="Player" x="773.333" y="813.333">
+   <point/>
+  </object>
+  <object id="340" name="Enemy" x="618.667" y="1053.33">
+   <point/>
+  </object>
  </objectgroup>
 </map>
