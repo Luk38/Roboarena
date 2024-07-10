@@ -91,6 +91,17 @@ def load_images():
 
 enemy_frames = load_images()
 
+# Score
+score = 0
+score_font = pygame.font.Font(None, 50)
+score_surface = score_font.render(f"Score: {score}", True, "black")
+score_rect = score_surface.get_rect(center=(player.rect.center))
+
+score_sprite = pygame.sprite.Sprite()
+score_sprite.image = score_surface
+score_sprite.rect = score_rect
+all_sprites.add(score_sprite)
+
 while True:
     # Process player inputs. Event handler
     for event in pygame.event.get():
@@ -126,6 +137,23 @@ while True:
         # ...
         pygame.display.set_caption("Roboarena")
         screen.fill("light yellow")  # Fill the display with a solid color
+
+        # bullet collisions
+        if bullet_sprites:
+            for bullet in bullet_sprites:
+                collision_sprites = pygame.sprite.spritecollide(
+                    bullet, enemy_sprites, dokill=True,
+                    collided=pygame.sprite.collide_mask)
+                if collision_sprites:
+                    for sprite in collision_sprites:
+                        sprite.destroy()
+                        score += 1
+
+        # update the score
+        score_surface = score_font.render(f"Score: {score}", True, BLACK)
+        score_sprite.image = score_surface
+        score_sprite.rect.center = player.rect.center + pygame.Vector2(
+            SCREEN_WIDTH / 2.5, - SCREEN_HEIGHT / 2.2)
 
         # update all sprites
         all_sprites.update()
