@@ -42,6 +42,7 @@ all_sprites = AllSprites()
 collision_sprites = pygame.sprite.Group()
 enemy_sprites = pygame.sprite.Group()
 bullet_sprites = pygame.sprite.Group()
+enemie_bullet_sprites = pygame.sprite.Group()
 
 # Arena
 # Wasteland_arena = arena(all_sprites, collision_sprites,
@@ -117,7 +118,7 @@ while True:
             Enemy(choice(Wasteland_arena.spawn_positions),
                   choice(list(enemy_frames.values())),
                   (all_sprites, enemy_sprites, collision_sprites),
-                  player, collision_sprites)
+                  player, collision_sprites, enemie_bullet_sprites)
 
         if game_active:
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -147,7 +148,23 @@ while True:
                 if collision_sprites:
                     for sprite in collision_sprites:
                         sprite.destroy()
+                        enemy_sprites.remove(sprite)  # Remove the sprite from the group
+                        bullet.kill()  # Remove the bullet after it hits an enemy
                         score += 1
+
+        if enemie_bullet_sprites:
+            # check if player is hit by enemy bullet
+            player_hit = pygame.sprite.spritecollide(
+            player, enemie_bullet_sprites, dokill=True,
+            collided=pygame.sprite.collide_mask)
+            if player_hit:
+                for sprite in player_hit:
+                    sprite.kill()
+                    # Reduce player's lives
+                    player.lives -= 1
+                    if player.lives <= 0:
+                    #Destroy the player if no lives left
+                        game_active = False
 
         # update the score
         score_surface = score_font.render(f"Score: {score}", True, BLACK)
