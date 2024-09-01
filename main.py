@@ -2,7 +2,7 @@ import pygame
 from player import Player
 from arena import arena
 from groups import AllSprites
-from sprites import Cannon, Bullet
+from sprites import Cannon, Bullet, Healthbar
 from enemies import Enemy
 from random import choice
 from os.path import join
@@ -48,7 +48,6 @@ enemie_bullet_sprites = pygame.sprite.Group()
 # Wasteland_arena = arena(all_sprites, collision_sprites,
 # "Maps/Wasteland_Map/Roboarena_Wasteland.tmx", 32)
 # Wasteland_arena.setup()
-
 Wasteland_arena = arena(all_sprites, collision_sprites,
                         "Maps/Toxic_Map/Roboarena_Toxic.tmx", 32)
 Wasteland_arena.setup()
@@ -102,6 +101,10 @@ score_sprite = pygame.sprite.Sprite()
 score_sprite.image = score_surface
 score_sprite.rect = score_rect
 all_sprites.add(score_sprite)
+
+# Healthbar
+healthbar = Healthbar(player, all_sprites)
+all_sprites.add(healthbar)
 
 while True:
     # Process player inputs. Event handler
@@ -162,6 +165,8 @@ while True:
                     sprite.kill()
                     # Reduce player's lives
                     player.lives -= 1
+                    # update de healthbar
+                    healthbar.decrease_health()
                     if player.lives <= 0:
                     #Destroy the player if no lives left
                         game_active = False
