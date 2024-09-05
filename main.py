@@ -10,6 +10,7 @@ from os import walk
 
 
 pygame.init()
+pygame.mixer.init()
 
 # Define Screen and Colors
 SCREEN_WIDTH = 1000
@@ -42,6 +43,10 @@ all_sprites = AllSprites()
 collision_sprites = pygame.sprite.Group()
 enemy_sprites = pygame.sprite.Group()
 bullet_sprites = pygame.sprite.Group()
+
+# Hintergrundmusik laden
+pygame.mixer.music.load("sound_effects/main_menu_sound.mp3")
+pygame.mixer.music.set_volume(0.5)  # Volume (0.0 bis 1.0)
 
 # Arena
 # Wasteland_arena = arena(all_sprites, collision_sprites,
@@ -169,7 +174,10 @@ while True:
         screen.fill("black")
     elif not game_active and not settings_active:
         # Do logical updates here.
-        # ...
+        # backround music
+        if not pygame.mixer.music.get_busy():
+            pygame.mixer.music.play(-1) # -1 loop the music
+
         pygame.display.set_caption("Main Menu")
         # Render the graphics here.
         # ...
@@ -193,8 +201,10 @@ while True:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if start_button_rect.collidepoint(event.pos):
                 game_active = True
+                pygame.mixer.music.stop()  # stop the backround music
             elif settings_button_rect.collidepoint(event.pos):
                 settings_active = True
+                pygame.mixer.music.stop()  # stop the backround music
             elif quit_button_rect.collidepoint(event.pos):
                 pygame.quit()
 
