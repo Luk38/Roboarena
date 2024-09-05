@@ -26,8 +26,10 @@ clock = pygame.time.Clock()
 # Variable if game active
 game_active = False
 settings_active = False
+game_over_active = False
+main_menu_active = False
 
-# load buttons
+# Main Menu buttons
 start_button_surface = pygame.image.load("img/Menu-images/startbutton.png")
 start_button_surface = pygame.transform.scale_by(start_button_surface, 0.5)
 settings_button_surface = pygame.image.load(
@@ -36,6 +38,12 @@ settings_button_surface = pygame.transform.scale_by(
     settings_button_surface, 0.5)
 quit_button_surface = pygame.image.load("img/Menu-images/quitbutton.png")
 quit_button_surface = pygame.transform.scale_by(quit_button_surface, 0.5)
+
+# Game-Over buttons
+play_again_button_surface = pygame.image.load("img/Game Over-images/play_again_button.png")
+play_again_button_surface = pygame.transform.scale_by(play_again_button_surface, 0.5)
+main_menu_button_surface = pygame.image.load("img/Game Over-images/main_menu_button.png")
+main_menu_button_surface = pygame.transform.scale_by(main_menu_button_surface, 0.5)
 
 # groups
 all_sprites = AllSprites()
@@ -72,7 +80,6 @@ mouse_button_pressed = False
 # enemy spawn timer
 enemy_event = pygame.event.custom_type()
 pygame.time.set_timer(enemy_event, 8000)
-
 
 # load enemy images
 def load_images():
@@ -170,6 +177,7 @@ while True:
                     if player.lives <= 0:
                     #Destroy the player if no lives left
                         game_active = False
+                        game_over_active = True
 
         # update the score
         score_surface = score_font.render(f"Score: {score}", True, BLACK)
@@ -189,6 +197,40 @@ while True:
     elif settings_active:
         pygame.display.set_caption("Settings")
         screen.fill("black")
+    elif game_over_active:
+        pygame.display.set_caption("Game Over")
+        screen.fill("black")
+
+        # Game Over Text
+        game_over_text_font = pygame.font.Font(None, 100)
+        game_over_text_surface = game_over_text_font.render("Game Over", True, "red")
+        game_over_text_rect = game_over_text_surface.get_rect(center=(SCREEN_WIDTH // 2,
+                                                  SCREEN_HEIGHT // 6))
+        screen.blit(game_over_text_surface, game_over_text_rect)
+
+        # Score Text
+        score_text_font = pygame.font.Font(None, 70)
+        score_text_surface = score_text_font.render(f"Score: {score}", True, "white")
+        score_text_rect = score_text_surface.get_rect(center=(SCREEN_WIDTH // 2,
+                                                            SCREEN_HEIGHT // 2.5))
+        screen.blit(score_text_surface, score_text_rect)
+
+        # Game Over buttons
+        main_menu_button_rect = main_menu_button_surface.get_rect(
+            center=(SCREEN_WIDTH // 1.5, SCREEN_HEIGHT // 1.5))
+        screen.blit(main_menu_button_surface, main_menu_button_rect)
+        play_again_button_rect = play_again_button_surface.get_rect(
+            center=(SCREEN_WIDTH // 3, SCREEN_HEIGHT // 1.5))
+        screen.blit(play_again_button_surface, play_again_button_rect)
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if play_again_button_rect.collidepoint(event.pos):
+                game_active = True
+            if main_menu_button_rect.collidepoint(event.pos):
+                settings_active = False
+                game_over_active = False
+                game_active = False
+
+
     elif not game_active and not settings_active:
         # Do logical updates here.
         # ...
