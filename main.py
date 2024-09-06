@@ -26,7 +26,7 @@ clock = pygame.time.Clock()
 # Variable if game active
 game_active = False
 settings_active = False
-game_over_active = True
+game_over_active = False
 main_menu_active = False
 
 # Main Menu buttons
@@ -40,10 +40,18 @@ quit_button_surface = pygame.image.load("img/Menu-images/quitbutton.png")
 quit_button_surface = pygame.transform.scale_by(quit_button_surface, 0.5)
 
 # Game-Over buttons
-play_again_button_surface = pygame.image.load("img/Game Over-images/play_again_button.png")
-play_again_button_surface = pygame.transform.scale_by(play_again_button_surface, 0.5)
-main_menu_button_surface = pygame.image.load("img/Game Over-images/main_menu_button.png")
-main_menu_button_surface = pygame.transform.scale_by(main_menu_button_surface, 0.5)
+play_again_button_surface = pygame.image.load(
+    "img/Game Over-images/play_again_button.png"
+)
+play_again_button_surface = pygame.transform.scale_by(
+    play_again_button_surface, 0.5
+)
+main_menu_button_surface = pygame.image.load(
+    "img/Game Over-images/main_menu_button.png"
+)
+main_menu_button_surface = pygame.transform.scale_by(
+    main_menu_button_surface, 0.5
+)
 
 # groups
 all_sprites = AllSprites()
@@ -81,9 +89,12 @@ mouse_button_pressed = False
 enemy_event = pygame.event.custom_type()
 pygame.time.set_timer(enemy_event, 8000)
 
+
 def reset_game():
-    global game_active, game_over_active, main_menu_active, score, score_rect, score_surface, score_sprite
-    global all_sprites, collision_sprites, enemy_sprites, bullet_sprites, enemie_bullet_sprites
+    global game_active, game_over_active, main_menu_active, all_sprites
+    global score, score_rect, score_surface, score_sprite
+    global collision_sprites, enemy_sprites, bullet_sprites
+    global enemie_bullet_sprites, bullet_sprites
     global player, healthbar, player_cannon, player_cannonb
 
     # Spielzustände zurücksetzen
@@ -105,9 +116,15 @@ def reset_game():
     Wasteland_arena.setup()
 
     # Spieler und seine Kanonen neu erstellen
-    player = Player((1500, 800), (all_sprites, collision_sprites), collision_sprites)
-    player_cannonb = Cannon(player, all_sprites, "img/Assets/Gun_07_B.png", 0.25)
-    player_cannon = Cannon(player, all_sprites, "img/Assets/cannon.png", 0.35)
+    player = Player(
+        (1500, 800), (all_sprites, collision_sprites), collision_sprites
+    )
+    player_cannonb = Cannon(
+        player, all_sprites, "img/Assets/Gun_07_B.png", 0.25
+    )
+    player_cannon = Cannon(
+        player, all_sprites, "img/Assets/cannon.png", 0.35
+    )
 
     # Spieler-Score
     score = 0
@@ -120,10 +137,10 @@ def reset_game():
     score_sprite.rect = score_rect
     all_sprites.add(score_sprite)
 
-
     # Gesundheitsleiste neu erstellen
     healthbar = Healthbar(player, all_sprites)
     all_sprites.add(healthbar)
+
 
 # load enemy images
 def load_images():
@@ -202,15 +219,16 @@ while True:
                 if collision_sprites:
                     for sprite in collision_sprites:
                         sprite.destroy()
-                        enemy_sprites.remove(sprite)  # Remove the sprite from the group
-                        bullet.kill()  # Remove the bullet after it hits an enemy
+                        enemy_sprites.remove(sprite)  # Remove from group
+                        bullet.kill()  # Remove the bullet
                         score += 1
 
         if enemie_bullet_sprites:
             # check if player is hit by enemy bullet
             player_hit = pygame.sprite.spritecollide(
-            player, enemie_bullet_sprites, dokill=True,
-            collided=pygame.sprite.collide_mask)
+                player, enemie_bullet_sprites,
+                dokill=True, collided=pygame.sprite.collide_mask
+                )
             if player_hit:
                 for sprite in player_hit:
                     sprite.kill()
@@ -219,7 +237,7 @@ while True:
                     # update the healthbar
                     healthbar.decrease_health()
                     if player.lives <= 0:
-                    #Destroy the player if no lives left
+                        # Destroy the player if no lives left
                         game_active = False
                         game_over_active = True
 
@@ -247,16 +265,22 @@ while True:
 
         # Game Over Text
         game_over_text_font = pygame.font.Font(None, 100)
-        game_over_text_surface = game_over_text_font.render("Game Over", True, "red")
-        game_over_text_rect = game_over_text_surface.get_rect(center=(SCREEN_WIDTH // 2,
-                                                  SCREEN_HEIGHT // 6))
+        game_over_text_surface = game_over_text_font.render(
+            "Game Over", True, "red"
+        )
+        game_over_text_rect = game_over_text_surface.get_rect(
+            center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 6)
+        )
         screen.blit(game_over_text_surface, game_over_text_rect)
 
         # Score Text
         score_text_font = pygame.font.Font(None, 70)
-        score_text_surface = score_text_font.render(f"Score: {score}", True, "white")
-        score_text_rect = score_text_surface.get_rect(center=(SCREEN_WIDTH // 2,
-                                                            SCREEN_HEIGHT // 2.5))
+        score_text_surface = score_text_font.render(
+            f"Score: {score}", True, "white"
+        )
+        score_text_rect = score_text_surface.get_rect(
+            center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2.5)
+        )
         screen.blit(score_text_surface, score_text_rect)
 
         # Game Over buttons
@@ -273,7 +297,6 @@ while True:
                 settings_active = False
                 game_over_active = False
                 game_active = False
-
 
     elif not game_active and not settings_active:
         # Do logical updates here.
