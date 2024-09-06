@@ -1,12 +1,21 @@
 import pygame
 from random import choice
 
+from sprites import Bullet
+
+# Bullet
+player_bullet_surf = pygame.image.load("img/Assets/Plasma.png")
+player_bullet_surf = pygame.transform.scale_by(player_bullet_surf, 0.3)
+
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, pos, frames, groups, player, collision_sprites):
+    def __init__(self, pos, frames, groups, player, collision_sprites, bullet_sprites):
         super().__init__(groups)
         self.player = player
         self.enemy_sprites = groups[1]
+        self.all_sprites = groups[0]
+        self.bullet_sprites = bullet_sprites
+        self.clock = pygame.time.Clock()
 
         # image
         self.frames, self.frame_index = frames, 0
@@ -23,6 +32,9 @@ class Enemy(pygame.sprite.Sprite):
         self.dir = pygame.math.Vector2(0, 0)
         self.change_dir_time = pygame.time.get_ticks() + 1000
 
+        # shooting
+        self.last_shot_time = pygame.time.get_ticks()
+        self.shoot_cooldown = 500
     def animate(self):
         self.frame_index += self.animation_speed
         self.image = pygame.transform.scale_by(self.
@@ -56,6 +68,15 @@ class Enemy(pygame.sprite.Sprite):
         self.hitbox_rect.y += self.dir.y * self.vel
         self.collision('vertical')
         self.rect.center = self.hitbox_rect.center
+
+    def shoot(self,):
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_shot_time >= self.shoot_cooldown:
+            pos = self.rect.center
+            Bullet(player_bullet_surf, pos,
+                 self.dir,
+                (self.all_sprites, self.bullet_sprites))
+            self.last_shot_time = current_time
 
     def collision(self, direction):
         for sprite in self.collision_sprites:
@@ -93,3 +114,4 @@ class Enemy(pygame.sprite.Sprite):
     def update(self):
         self.move()
         self.animate()
+        self.shoot()

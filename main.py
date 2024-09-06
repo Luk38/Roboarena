@@ -2,7 +2,7 @@ import pygame
 from player import Player
 from arena import arena
 from groups import AllSprites
-from sprites import Cannon, Bullet
+from sprites import Cannon, Bullet, Healthbar
 from enemies import Enemy
 from random import choice
 from os.path import join
@@ -26,8 +26,10 @@ clock = pygame.time.Clock()
 # Variable if game active
 game_active = False
 settings_active = False
+game_over_active = False
+main_menu_active = False
 
-# load buttons
+# Main Menu buttons
 start_button_surface = pygame.image.load("img/Menu-images/startbutton.png")
 start_button_surface = pygame.transform.scale_by(start_button_surface, 0.5)
 settings_button_surface = pygame.image.load(
@@ -37,17 +39,31 @@ settings_button_surface = pygame.transform.scale_by(
 quit_button_surface = pygame.image.load("img/Menu-images/quitbutton.png")
 quit_button_surface = pygame.transform.scale_by(quit_button_surface, 0.5)
 
+# Game-Over buttons
+play_again_button_surface = pygame.image.load(
+    "img/Game Over-images/play_again_button.png"
+)
+play_again_button_surface = pygame.transform.scale_by(
+    play_again_button_surface, 0.5
+)
+main_menu_button_surface = pygame.image.load(
+    "img/Game Over-images/main_menu_button.png"
+)
+main_menu_button_surface = pygame.transform.scale_by(
+    main_menu_button_surface, 0.5
+)
+
 # groups
 all_sprites = AllSprites()
 collision_sprites = pygame.sprite.Group()
 enemy_sprites = pygame.sprite.Group()
 bullet_sprites = pygame.sprite.Group()
+enemie_bullet_sprites = pygame.sprite.Group()
 
 # Arena
 # Wasteland_arena = arena(all_sprites, collision_sprites,
 # "Maps/Wasteland_Map/Roboarena_Wasteland.tmx", 32)
 # Wasteland_arena.setup()
-
 Wasteland_arena = arena(all_sprites, collision_sprites,
                         "Maps/Toxic_Map/Roboarena_Toxic.tmx", 32)
 Wasteland_arena.setup()
@@ -72,6 +88,58 @@ mouse_button_pressed = False
 # enemy spawn timer
 enemy_event = pygame.event.custom_type()
 pygame.time.set_timer(enemy_event, 8000)
+
+
+def reset_game():
+    global game_active, game_over_active, main_menu_active, all_sprites
+    global score, score_rect, score_surface, score_sprite
+    global collision_sprites, enemy_sprites, bullet_sprites
+    global enemie_bullet_sprites, bullet_sprites
+    global player, healthbar, player_cannon, player_cannonb
+
+    # Spielzustände zurücksetzen
+    game_active = True
+    game_over_active = False
+    main_menu_active = False
+    score = 0
+
+    # Erstelle neue Gruppen
+    all_sprites = AllSprites()
+    collision_sprites = pygame.sprite.Group()
+    enemy_sprites = pygame.sprite.Group()
+    bullet_sprites = pygame.sprite.Group()
+    enemie_bullet_sprites = pygame.sprite.Group()
+
+    # Arena neu erstellen
+    Wasteland_arena = arena(all_sprites, collision_sprites,
+                            "Maps/Toxic_Map/Roboarena_Toxic.tmx", 32)
+    Wasteland_arena.setup()
+
+    # Spieler und seine Kanonen neu erstellen
+    player = Player(
+        (1500, 800), (all_sprites, collision_sprites), collision_sprites
+    )
+    player_cannonb = Cannon(
+        player, all_sprites, "img/Assets/Gun_07_B.png", 0.25
+    )
+    player_cannon = Cannon(
+        player, all_sprites, "img/Assets/cannon.png", 0.35
+    )
+
+    # Spieler-Score
+    score = 0
+    score_font = pygame.font.Font(None, 50)
+    score_surface = score_font.render(f"Score: {score}", True, "black")
+    score_rect = score_surface.get_rect(center=(player.rect.center))
+
+    score_sprite = pygame.sprite.Sprite()
+    score_sprite.image = score_surface
+    score_sprite.rect = score_rect
+    all_sprites.add(score_sprite)
+
+    # Gesundheitsleiste neu erstellen
+    healthbar = Healthbar(player, all_sprites)
+    all_sprites.add(healthbar)
 
 
 # load enemy images
@@ -102,6 +170,10 @@ score_sprite.image = score_surface
 score_sprite.rect = score_rect
 all_sprites.add(score_sprite)
 
+# Healthbar
+healthbar = Healthbar(player, all_sprites)
+all_sprites.add(healthbar)
+
 while True:
     # Process player inputs. Event handler
     for event in pygame.event.get():
@@ -117,7 +189,7 @@ while True:
             Enemy(choice(Wasteland_arena.spawn_positions),
                   choice(list(enemy_frames.values())),
                   (all_sprites, enemy_sprites, collision_sprites),
-                  player, collision_sprites)
+                  player, collision_sprites, enemie_bullet_sprites)
 
         if game_active:
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -147,7 +219,27 @@ while True:
                 if collision_sprites:
                     for sprite in collision_sprites:
                         sprite.destroy()
+                        enemy_sprites.remove(sprite)  # Remove from group
+                        bullet.kill()  # Remove the bullet
                         score += 1
+
+        if enemie_bullet_sprites:
+            # check if player is hit by enemy bullet
+            player_hit = pygame.sprite.spritecollide(
+                player, enemie_bullet_sprites,
+                dokill=True, collided=pygame.sprite.collide_mask
+                )
+            if player_hit:
+                for sprite in player_hit:
+                    sprite.kill()
+                    # Reduce player's lives
+                    player.lives -= 1
+                    # update the healthbar
+                    healthbar.decrease_health()
+                    if player.lives <= 0:
+                        # Destroy the player if no lives left
+                        game_active = False
+                        game_over_active = True
 
         # update the score
         score_surface = score_font.render(f"Score: {score}", True, BLACK)
@@ -167,6 +259,45 @@ while True:
     elif settings_active:
         pygame.display.set_caption("Settings")
         screen.fill("black")
+    elif game_over_active:
+        pygame.display.set_caption("Game Over")
+        screen.fill("black")
+
+        # Game Over Text
+        game_over_text_font = pygame.font.Font(None, 100)
+        game_over_text_surface = game_over_text_font.render(
+            "Game Over", True, "red"
+        )
+        game_over_text_rect = game_over_text_surface.get_rect(
+            center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 6)
+        )
+        screen.blit(game_over_text_surface, game_over_text_rect)
+
+        # Score Text
+        score_text_font = pygame.font.Font(None, 70)
+        score_text_surface = score_text_font.render(
+            f"Score: {score}", True, "white"
+        )
+        score_text_rect = score_text_surface.get_rect(
+            center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2.5)
+        )
+        screen.blit(score_text_surface, score_text_rect)
+
+        # Game Over buttons
+        main_menu_button_rect = main_menu_button_surface.get_rect(
+            center=(SCREEN_WIDTH // 1.5, SCREEN_HEIGHT // 1.5))
+        screen.blit(main_menu_button_surface, main_menu_button_rect)
+        play_again_button_rect = play_again_button_surface.get_rect(
+            center=(SCREEN_WIDTH // 3, SCREEN_HEIGHT // 1.5))
+        screen.blit(play_again_button_surface, play_again_button_rect)
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if play_again_button_rect.collidepoint(event.pos):
+                reset_game()
+            if main_menu_button_rect.collidepoint(event.pos):
+                settings_active = False
+                game_over_active = False
+                game_active = False
+
     elif not game_active and not settings_active:
         # Do logical updates here.
         # ...

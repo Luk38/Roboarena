@@ -10,6 +10,7 @@ class Player(pygame.sprite.Sprite):
         self.pos = pos
         self.rect = self.image.get_rect(center=pos)
         self.hitbox_rect = self.rect.inflate(-20, 0)
+        self.lives = 10
 
         # movement
         self.vel = 5
