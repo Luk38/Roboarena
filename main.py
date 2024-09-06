@@ -26,7 +26,7 @@ clock = pygame.time.Clock()
 # Variable if game active
 game_active = False
 settings_active = False
-game_over_active = False
+game_over_active = True
 main_menu_active = False
 
 # Main Menu buttons
@@ -80,6 +80,50 @@ mouse_button_pressed = False
 # enemy spawn timer
 enemy_event = pygame.event.custom_type()
 pygame.time.set_timer(enemy_event, 8000)
+
+def reset_game():
+    global game_active, game_over_active, main_menu_active, score, score_rect, score_surface, score_sprite
+    global all_sprites, collision_sprites, enemy_sprites, bullet_sprites, enemie_bullet_sprites
+    global player, healthbar, player_cannon, player_cannonb
+
+    # Spielzustände zurücksetzen
+    game_active = True
+    game_over_active = False
+    main_menu_active = False
+    score = 0
+
+    # Erstelle neue Gruppen
+    all_sprites = AllSprites()
+    collision_sprites = pygame.sprite.Group()
+    enemy_sprites = pygame.sprite.Group()
+    bullet_sprites = pygame.sprite.Group()
+    enemie_bullet_sprites = pygame.sprite.Group()
+
+    # Arena neu erstellen
+    Wasteland_arena = arena(all_sprites, collision_sprites,
+                            "Maps/Toxic_Map/Roboarena_Toxic.tmx", 32)
+    Wasteland_arena.setup()
+
+    # Spieler und seine Kanonen neu erstellen
+    player = Player((1500, 800), (all_sprites, collision_sprites), collision_sprites)
+    player_cannonb = Cannon(player, all_sprites, "img/Assets/Gun_07_B.png", 0.25)
+    player_cannon = Cannon(player, all_sprites, "img/Assets/cannon.png", 0.35)
+
+    # Spieler-Score
+    score = 0
+    score_font = pygame.font.Font(None, 50)
+    score_surface = score_font.render(f"Score: {score}", True, "black")
+    score_rect = score_surface.get_rect(center=(player.rect.center))
+
+    score_sprite = pygame.sprite.Sprite()
+    score_sprite.image = score_surface
+    score_sprite.rect = score_rect
+    all_sprites.add(score_sprite)
+
+
+    # Gesundheitsleiste neu erstellen
+    healthbar = Healthbar(player, all_sprites)
+    all_sprites.add(healthbar)
 
 # load enemy images
 def load_images():
@@ -172,7 +216,7 @@ while True:
                     sprite.kill()
                     # Reduce player's lives
                     player.lives -= 1
-                    # update de healthbar
+                    # update the healthbar
                     healthbar.decrease_health()
                     if player.lives <= 0:
                     #Destroy the player if no lives left
@@ -224,7 +268,7 @@ while True:
         screen.blit(play_again_button_surface, play_again_button_rect)
         if event.type == pygame.MOUSEBUTTONDOWN:
             if play_again_button_rect.collidepoint(event.pos):
-                game_active = True
+                reset_game()
             if main_menu_button_rect.collidepoint(event.pos):
                 settings_active = False
                 game_over_active = False
