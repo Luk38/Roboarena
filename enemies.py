@@ -9,7 +9,8 @@ player_bullet_surf = pygame.transform.scale_by(player_bullet_surf, 0.3)
 
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, pos, frames, groups, player, collision_sprites, bullet_sprites):
+    def __init__(self, pos, frames, groups, player, collision_sprites,
+                 bullet_sprites):
         super().__init__(groups)
         self.player = player
         self.enemy_sprites = groups[1]
@@ -24,7 +25,7 @@ class Enemy(pygame.sprite.Sprite):
 
         # rect
         self.rect = self.image.get_rect(center=pos)
-        self.hitbox_rect = self.rect.inflate(-20, -40)
+        self.hitbox_rect = self.rect.inflate(-20, 0)
         self.collision_sprites = collision_sprites
 
         # move
@@ -35,11 +36,12 @@ class Enemy(pygame.sprite.Sprite):
         # shooting
         self.last_shot_time = pygame.time.get_ticks()
         self.shoot_cooldown = 500
+
     def animate(self):
         self.frame_index += self.animation_speed
         self.image = pygame.transform.scale_by(self.
-                                               frames[int(self.frame_index)
-                                                      % len(self.frames)], 0.5)
+                                               frames[int(self.frame_index) %
+                                                      len(self.frames)], 0.75)
 
     def move(self):
         player_pos = pygame.Vector2(self.player.rect.center)
@@ -69,13 +71,12 @@ class Enemy(pygame.sprite.Sprite):
         self.collision('vertical')
         self.rect.center = self.hitbox_rect.center
 
-    def shoot(self,):
+    def shoot(self):
         current_time = pygame.time.get_ticks()
         if current_time - self.last_shot_time >= self.shoot_cooldown:
             pos = self.rect.center
-            Bullet(player_bullet_surf, pos,
-                 self.dir,
-                (self.all_sprites, self.bullet_sprites))
+            Bullet(player_bullet_surf, pos, self.dir,
+                   (self.all_sprites, self.bullet_sprites))
             self.last_shot_time = current_time
 
     def collision(self, direction):
