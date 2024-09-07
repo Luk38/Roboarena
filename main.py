@@ -22,6 +22,7 @@ BLACK = (0, 0, 0)
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("RoboArena")
 
+
 clock = pygame.time.Clock()
 
 # Variable if game active
@@ -61,9 +62,41 @@ enemy_sprites = pygame.sprite.Group()
 bullet_sprites = pygame.sprite.Group()
 enemy_bullet_sprites = pygame.sprite.Group()
 
-# Hintergrundmusik laden
-pygame.mixer.music.load("sound_effects/main_menu_sound.mp3")
+
+# load main menu sound
+pygame.mixer.music.load(
+    "sound_effects/main_menu_2_sound.mp3"
+)
+# load button sound
+button_sound = pygame.mixer.Sound(
+    "sound_effects/button_sound.mp3"
+)
+# load player destroyed sound
+player_destroyed_sound = pygame.mixer.Sound(
+    "sound_effects/player_destroyed_sound.mp3"
+)
+# load player shooting sound
+player_shoot_sound = pygame.mixer.Sound(
+    "sound_effects/player_shoot_sound.mp3"
+)
+# load player damage sound
+player_damage_sound = pygame.mixer.Sound(
+    "sound_effects/player_damage_sound.mp3"
+)
+# load enemy destroyed sound
+enemy_destroyed_sound = pygame.mixer.Sound(
+    "sound_effects/enemy_destroyed_sound.mp3"
+)
+
+# set the music volume
 pygame.mixer.music.set_volume(0.5)  # Volume (0.0 bis 1.0)
+
+# set the sound volume
+button_sound.set_volume(0.5)
+player_destroyed_sound.set_volume(0.5)
+player_shoot_sound.set_volume(0.5)
+player_damage_sound.set_volume(0.5)
+enemy_destroyed_sound.set_volume(0.5)
 
 # Arena
 # Wasteland_arena = arena(all_sprites, collision_sprites,
@@ -205,6 +238,7 @@ while True:
                     Bullet(player_bullet_surf, pos,
                            player_cannon.player_direction,
                            (all_sprites, bullet_sprites))
+                    player_shoot_sound.play()  # shooting sound
             elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
                     mouse_button_pressed = False
@@ -227,6 +261,8 @@ while True:
                         enemy_sprites.remove(sprite)  # Remove from group
                         bullet.kill()  # Remove the bullet
                         score += 1
+                        enemy_destroyed_sound.play()
+
 
         if enemy_bullet_sprites:
             # check if player is hit by enemy bullet
@@ -241,10 +277,12 @@ while True:
                     player.lives -= 1
                     # update the healthbar
                     healthbar.decrease_health()
+                    player_damage_sound.play()
                     if player.lives <= 0:
                         # Destroy the player if no lives left
                         game_active = False
                         game_over_active = True
+                        player_destroyed_sound.play()
 
         # update the score
         score_surface = score_font.render(f"Score: {score}", True, BLACK)
@@ -264,6 +302,8 @@ while True:
     elif settings_active:
         pygame.display.set_caption("Settings")
         screen.fill("black")
+
+
     elif game_over_active:
         pygame.display.set_caption("Game Over")
         screen.fill("black")
@@ -298,10 +338,12 @@ while True:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if play_again_button_rect.collidepoint(event.pos):
                 reset_game()
+                button_sound.play()
             if main_menu_button_rect.collidepoint(event.pos):
                 settings_active = False
                 game_over_active = False
                 game_active = False
+                button_sound.play()
 
     elif not game_active and not settings_active:
         # Do logical updates here.
@@ -333,9 +375,11 @@ while True:
             if start_button_rect.collidepoint(event.pos):
                 game_active = True
                 pygame.mixer.music.stop()  # stop the backround music
+                button_sound.play()
             elif settings_button_rect.collidepoint(event.pos):
                 settings_active = True
                 pygame.mixer.music.stop()  # stop the backround music
+                button_sound.play()
             elif quit_button_rect.collidepoint(event.pos):
                 pygame.quit()
 
