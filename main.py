@@ -263,7 +263,6 @@ while True:
                         score += 1
                         enemy_destroyed_sound.play()
 
-
         if enemy_bullet_sprites:
             # check if player is hit by enemy bullet
             player_hit = pygame.sprite.spritecollide(
@@ -302,7 +301,6 @@ while True:
     elif settings_active:
         pygame.display.set_caption("Settings")
         screen.fill("black")
-
 
     elif game_over_active:
         pygame.display.set_caption("Game Over")
@@ -385,7 +383,6 @@ while True:
             elif quit_button_rect.collidepoint(event.pos):
                 print("1")
                 pygame.quit()
-
 
     pygame.display.flip()  # Refresh on-screen display
     clock.tick(60)  # wait until next frame (at 60 FPS)
