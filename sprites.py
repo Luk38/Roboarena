@@ -106,7 +106,7 @@ class Healthbar(pygame.sprite.Sprite):
     def update(self):
         # Position the healthbar relative to the player
         offset = pygame.Vector2(-380, 320)
-        self.rect.topleft = self.player.rect.topleft + offset
+        self.rect.center = self.player.rect.center + offset
         for i in range(self.total_health):
             cell_x = i * self.cell_width
             if i < self.current_health:

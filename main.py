@@ -29,7 +29,7 @@ clock = pygame.time.Clock()
 game_active = False
 settings_active = False
 game_over_active = False
-main_menu_active = False
+main_menu_active = True
 
 # Main Menu buttons
 start_button_surface = pygame.image.load("img/Menu-images/startbutton.png")
@@ -343,9 +343,11 @@ while True:
                 settings_active = False
                 game_over_active = False
                 game_active = False
+                pygame.time.delay(100)
+                main_menu_active = True
                 button_sound.play()
 
-    elif not game_active and not settings_active:
+    elif main_menu_active:
         # Do logical updates here.
         # backround music
         if not pygame.mixer.music.get_busy():
@@ -381,7 +383,9 @@ while True:
                 pygame.mixer.music.stop()  # stop the backround music
                 button_sound.play()
             elif quit_button_rect.collidepoint(event.pos):
+                print("1")
                 pygame.quit()
+
 
     pygame.display.flip()  # Refresh on-screen display
     clock.tick(60)  # wait until next frame (at 60 FPS)
