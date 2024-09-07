@@ -58,7 +58,7 @@ all_sprites = AllSprites()
 collision_sprites = pygame.sprite.Group()
 enemy_sprites = pygame.sprite.Group()
 bullet_sprites = pygame.sprite.Group()
-enemie_bullet_sprites = pygame.sprite.Group()
+enemy_bullet_sprites = pygame.sprite.Group()
 
 # Arena
 # Wasteland_arena = arena(all_sprites, collision_sprites,
@@ -94,7 +94,7 @@ def reset_game():
     global game_active, game_over_active, main_menu_active, all_sprites
     global score, score_rect, score_surface, score_sprite
     global collision_sprites, enemy_sprites, bullet_sprites
-    global enemie_bullet_sprites, bullet_sprites
+    global enemy_bullet_sprites, bullet_sprites
     global player, healthbar, player_cannon, player_cannonb
 
     # Spielzustände zurücksetzen
@@ -108,7 +108,7 @@ def reset_game():
     collision_sprites = pygame.sprite.Group()
     enemy_sprites = pygame.sprite.Group()
     bullet_sprites = pygame.sprite.Group()
-    enemie_bullet_sprites = pygame.sprite.Group()
+    enemy_bullet_sprites = pygame.sprite.Group()
 
     # Arena neu erstellen
     Wasteland_arena = arena(all_sprites, collision_sprites,
@@ -189,7 +189,7 @@ while True:
             Enemy(choice(Wasteland_arena.spawn_positions),
                   choice(list(enemy_frames.values())),
                   (all_sprites, enemy_sprites, collision_sprites),
-                  player, collision_sprites, enemie_bullet_sprites)
+                  player, collision_sprites, enemy_bullet_sprites)
 
         if game_active:
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -223,10 +223,10 @@ while True:
                         bullet.kill()  # Remove the bullet
                         score += 1
 
-        if enemie_bullet_sprites:
+        if enemy_bullet_sprites:
             # check if player is hit by enemy bullet
             player_hit = pygame.sprite.spritecollide(
-                player, enemie_bullet_sprites,
+                player, enemy_bullet_sprites,
                 dokill=True, collided=pygame.sprite.collide_mask
                 )
             if player_hit:
