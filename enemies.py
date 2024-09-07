@@ -9,8 +9,9 @@ player_bullet_surf = pygame.transform.scale_by(player_bullet_surf, 0.3)
 
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, pos, frames, groups, player, collision_sprites, bullet_sprites):
-        super().__init__(groups)
+    def __init__(self, pos, frames, groups, player, collision_sprites,
+                 bullet_sprites):
+        super().__init__(groups[0], groups[1], groups[2])
         self.player = player
         self.enemy_sprites = groups[1]
         self.all_sprites = groups[0]
@@ -33,8 +34,10 @@ class Enemy(pygame.sprite.Sprite):
         self.change_dir_time = pygame.time.get_ticks() + 1000
 
         # shooting
+        self.shooting_dir = pygame.math.Vector2()
         self.last_shot_time = pygame.time.get_ticks()
         self.shoot_cooldown = 500
+
     def animate(self):
         self.frame_index += self.animation_speed
         self.image = pygame.transform.scale_by(self.
@@ -70,12 +73,14 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.center = self.hitbox_rect.center
 
     def shoot(self,):
+        self.shooting_dir = (pygame.Vector2(self.player.rect.center)
+                             - pygame.Vector2(self.rect.center)).normalize()
         current_time = pygame.time.get_ticks()
         if current_time - self.last_shot_time >= self.shoot_cooldown:
             pos = self.rect.center
             Bullet(player_bullet_surf, pos,
-                 self.dir,
-                (self.all_sprites, self.bullet_sprites))
+                   self.shooting_dir,
+                   (self.all_sprites, self.bullet_sprites))
             self.last_shot_time = current_time
 
     def collision(self, direction):
