@@ -79,17 +79,18 @@ class Bullet(pygame.sprite.Sprite):
             self.kill()
 
 
-
 # Farben
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 ORANGE = (255, 165, 0)
 RED = (255, 0, 0)
 BLACK = (0, 0, 0)
+
+
 class Healthbar(pygame.sprite.Sprite):
-    def __init__(self,player, groups):
+    def __init__(self, player, groups):
         super().__init__()
-        #Positionierung der Healthbar:
+        # Positionierung der Healthbar:
         self.player = player
         self.pos = player.pos
         self.total_health = player.lives
@@ -111,15 +112,19 @@ class Healthbar(pygame.sprite.Sprite):
             if i < self.current_health:
                 if self.current_health >= 6:
                     color = GREEN
-                elif self.current_health >= 3: #turn healthbar-color orange if the current health under 6
+                elif self.current_health >= 3:
+                    # turn healthbar-color orange if the current health under 6
                     color = ORANGE
                 else:
-                    color = RED #turn healthbar-color red if the current health under 3
+                    color = RED
+                    # turn healthbar-color red if the current health under 3
             else:
                 color = BLACK
 
-            pygame.draw.rect(self.image, color, (cell_x, 0, self.cell_width, self.cell_height))
-            pygame.draw.rect(self.image, BLACK, (cell_x, 0, self.cell_width, self.cell_height), 1)
+            pygame.draw.rect(self.image, color, (cell_x, 0, self.cell_width,
+                                                 self.cell_height))
+            pygame.draw.rect(self.image, BLACK, (cell_x, 0, self.cell_width,
+                                                 self.cell_height), 1)
 
         # Zeichne den Text 'HP'
         font = pygame.font.SysFont(None, 35)
