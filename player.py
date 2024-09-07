@@ -10,6 +10,7 @@ class Player(pygame.sprite.Sprite):
         self.pos = pos
         self.rect = self.image.get_rect(center=pos)
         self.hitbox_rect = self.rect.inflate(-20, 0)
+        self.lives = 10
 
         # movement
         self.vel = 5
@@ -55,11 +56,18 @@ class Player(pygame.sprite.Sprite):
             self.image = pygame.transform.rotate(self.surf, self.current_angle)
             self.rect = self.image.get_rect(center=self.pos)
 
-        self.hitbox_rect.x += self.dir.x * self.vel
-        self.collision("horizontal")
-        self.hitbox_rect.y += self.dir.y * self.vel
-        self.collision("vertical")
-        self.rect.center = self.hitbox_rect.center
+        if self.dir.x != 0 and self.dir.y != 0:
+            self.hitbox_rect.x += self.dir.x * self.vel * 0.707
+            self.collision("horizontal")
+            self.hitbox_rect.y += self.dir.y * self.vel * 0.707
+            self.collision("vertical")
+            self.rect.center = self.hitbox_rect.center
+        else:
+            self.hitbox_rect.x += self.dir.x * self.vel
+            self.collision("horizontal")
+            self.hitbox_rect.y += self.dir.y * self.vel
+            self.collision("vertical")
+            self.rect.center = self.hitbox_rect.center
 
     def update(self):
         self.input()

@@ -77,3 +77,66 @@ class Bullet(pygame.sprite.Sprite):
 
         if pygame.time.get_ticks() - self.spawn_time >= self.lifetime:
             self.kill()
+
+
+# Farben
+WHITE = (255, 255, 255)
+GREEN = (0, 255, 0)
+ORANGE = (255, 165, 0)
+RED = (255, 0, 0)
+BLACK = (0, 0, 0)
+
+
+class Healthbar(pygame.sprite.Sprite):
+    def __init__(self, player, groups):
+        super().__init__()
+        # Positionierung der Healthbar:
+        self.player = player
+        self.pos = player.pos
+        self.total_health = player.lives
+        self.current_health = player.lives
+        self.bar_width = 200
+        self.bar_height = 30
+        self.cell_width = self.bar_width // self.total_health
+        self.cell_height = self.bar_height
+        self.image = pygame.Surface((self.bar_width, self.bar_height))
+        self.rect = self.image.get_rect()
+        self.update()
+
+    def update(self):
+        # Position the healthbar relative to the player
+        offset = pygame.Vector2(-380, 320)
+        self.rect.topleft = self.player.rect.topleft + offset
+        for i in range(self.total_health):
+            cell_x = i * self.cell_width
+            if i < self.current_health:
+                if self.current_health >= 6:
+                    color = GREEN
+                elif self.current_health >= 3:
+                    # turn healthbar-color orange if the current health under 6
+                    color = ORANGE
+                else:
+                    color = RED
+                    # turn healthbar-color red if the current health under 3
+            else:
+                color = BLACK
+
+            pygame.draw.rect(self.image, color, (cell_x, 0, self.cell_width,
+                                                 self.cell_height))
+            pygame.draw.rect(self.image, BLACK, (cell_x, 0, self.cell_width,
+                                                 self.cell_height), 1)
+
+        # Zeichne den Text 'HP'
+        font = pygame.font.SysFont(None, 35)
+        text = font.render('HP', True, BLACK)
+        self.image.blit(text, (self.bar_width + 10, 0))
+
+    def decrease_health(self):
+        if self.current_health > 0:
+            self.current_health -= 1
+            self.update()
+
+    def increase_health(self):
+        if self.current_health < self.total_health:
+            self.current_health += 1
+            self.update()
