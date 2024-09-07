@@ -307,7 +307,7 @@ while True:
         # Do logical updates here.
         # backround music
         if not pygame.mixer.music.get_busy():
-            pygame.mixer.music.play(-1) # -1 loop the music
+            pygame.mixer.music.play(-1)  # -1 loop the music
 
         pygame.display.set_caption("Main Menu")
         # Render the graphics here.
