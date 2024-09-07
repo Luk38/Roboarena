@@ -11,7 +11,9 @@ player_bullet_surf = pygame.transform.scale_by(player_bullet_surf, 0.3)
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, pos, frames, groups, player, collision_sprites,
                  bullet_sprites):
+      
         super().__init__(groups[0], groups[1], groups[2])
+
         self.player = player
         self.enemy_sprites = groups[1]
         self.all_sprites = groups[0]
@@ -25,7 +27,7 @@ class Enemy(pygame.sprite.Sprite):
 
         # rect
         self.rect = self.image.get_rect(center=pos)
-        self.hitbox_rect = self.rect.inflate(-20, -40)
+        self.hitbox_rect = self.rect.inflate(-20, 0)
         self.collision_sprites = collision_sprites
 
         # move
@@ -41,8 +43,8 @@ class Enemy(pygame.sprite.Sprite):
     def animate(self):
         self.frame_index += self.animation_speed
         self.image = pygame.transform.scale_by(self.
-                                               frames[int(self.frame_index)
-                                                      % len(self.frames)], 0.5)
+                                               frames[int(self.frame_index) %
+                                                      len(self.frames)], 0.75)
 
     def move(self):
         player_pos = pygame.Vector2(self.player.rect.center)
