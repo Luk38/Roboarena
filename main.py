@@ -384,10 +384,10 @@ while True:
             if play_again_button_rect.collidepoint(event.pos):
                 reset_game(selected_map)
                 button_sound.play()
-                pygame.time.delay(100)
                 map_selection_active = True
                 game_over_active = False
                 main_menu_active = False
+                pygame.time.delay(20)
             if main_menu_button_rect.collidepoint(event.pos):
                 reset_game(selected_map)
                 settings_active = False
