@@ -3,11 +3,6 @@ from random import choice
 
 from sprites import Bullet
 
-# Bullet
-player_bullet_surf = pygame.image.load("img/Assets/enemy_bullet.png")
-player_bullet_surf = pygame.transform.scale_by(player_bullet_surf, 1.25)
-player_bullet_surf = pygame.transform.rotate(player_bullet_surf, 90)
-
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, pos, frames, groups, player, collision_sprites,
@@ -19,6 +14,7 @@ class Enemy(pygame.sprite.Sprite):
         self.all_sprites = groups[0]
         self.bullet_sprites = bullet_sprites
         self.clock = pygame.time.Clock()
+        self.pos = pos
 
         # image
         self.frames, self.frame_index = frames, 0
@@ -40,6 +36,11 @@ class Enemy(pygame.sprite.Sprite):
         self.last_shot_time = pygame.time.get_ticks()
         self.shoot_cooldown = 500
 
+        # Bullet
+        self.bullet_surf = pygame.image.load("img/Assets/enemy_bullet.png")
+        self.bullet_surf = pygame.transform.rotate(self.bullet_surf, 90)
+        self.bullet_surf = pygame.transform.scale_by(self.bullet_surf, 1.25)
+
     def animate(self):
         self.frame_index += self.animation_speed
         self.image = pygame.transform.scale_by(self.
@@ -49,6 +50,7 @@ class Enemy(pygame.sprite.Sprite):
     def move(self):
         player_pos = pygame.Vector2(self.player.rect.center)
         enemy_pos = pygame.Vector2(self.rect.center)
+        self.pos = enemy_pos
         if pygame.time.get_ticks() > self.change_dir_time:
             self.dir = choice((pygame.math.Vector2(0, 0),
                                pygame.math.Vector2(1, 0),
@@ -79,8 +81,7 @@ class Enemy(pygame.sprite.Sprite):
                              - pygame.Vector2(self.rect.center)).normalize()
         current_time = pygame.time.get_ticks()
         if current_time - self.last_shot_time >= self.shoot_cooldown:
-            pos = self.rect.center
-            Bullet(player_bullet_surf, pos,
+            Bullet(self.bullet_surf, self.pos,
                    self.shooting_dir,
                    (self.all_sprites, self.bullet_sprites))
             self.last_shot_time = current_time
