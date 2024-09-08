@@ -31,4 +31,5 @@ class arena:
         self.spawn_positions = []
         for obj in map.get_layer_by_name('Entitäten'):
             if obj.name == 'Enemy':
-                self.spawn_positions.append((obj.x*2, obj.y*2))
+                position = (obj.x * 2, obj.y * 2)
+                self.spawn_positions.append(position)

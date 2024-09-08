@@ -19,7 +19,7 @@ class Enemy(pygame.sprite.Sprite):
         # image
         self.frames, self.frame_index = frames, 0
         self.image = self.frames[self.frame_index]
-        self.animation_speed = 0.2
+        self.animation_speed = 0.08
 
         # rect
         self.rect = self.image.get_rect(center=pos)
@@ -34,7 +34,7 @@ class Enemy(pygame.sprite.Sprite):
         # shooting
         self.shooting_dir = pygame.math.Vector2()
         self.last_shot_time = pygame.time.get_ticks()
-        self.shoot_cooldown = 500
+        self.shoot_cooldown = 2500
 
         # Bullet
         self.bullet_surf = pygame.image.load("img/Assets/enemy_bullet.png")
@@ -81,7 +81,10 @@ class Enemy(pygame.sprite.Sprite):
                              - pygame.Vector2(self.rect.center)).normalize()
         current_time = pygame.time.get_ticks()
         if current_time - self.last_shot_time >= self.shoot_cooldown:
-            Bullet(self.bullet_surf, self.pos,
+            pos = self.rect.center
+            self.image = pygame.image.load("img/shot/1.png")
+            self.image = pygame.image.load("img/shot/2.png")
+            Bullet(player_bullet_surf, pos,
                    self.shooting_dir,
                    (self.all_sprites, self.bullet_sprites))
             self.last_shot_time = current_time
