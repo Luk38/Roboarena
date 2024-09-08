@@ -468,6 +468,7 @@ while True:
                 button_sound.play()
                 map_selection_active = True
                 game_over_active = False
+                game_active = False
                 main_menu_active = False
                 pygame.time.delay(100)
             if main_menu_button_rect.collidepoint(event.pos):
