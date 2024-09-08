@@ -30,6 +30,7 @@ game_active = False
 settings_active = False
 game_over_active = False
 main_menu_active = True
+map_selection_active = False
 
 # Main Menu buttons
 start_button_surface = pygame.image.load("img/Menu-images/startbutton.png")
@@ -40,6 +41,15 @@ settings_button_surface = pygame.transform.scale_by(
     settings_button_surface, 0.5)
 quit_button_surface = pygame.image.load("img/Menu-images/quitbutton.png")
 quit_button_surface = pygame.transform.scale_by(quit_button_surface, 0.5)
+
+# Map Selection buttons
+wasteland_button_surface = pygame.image.load(
+    "img/Menu-images/Wastelandbutton.png")
+wasteland_button_surface = pygame.transform.scale_by(
+    wasteland_button_surface, 0.5)
+
+toxic_button_surface = pygame.image.load("img/Menu-images/Toxicbutton.png")
+toxic_button_surface = pygame.transform.scale_by(toxic_button_surface, 0.5)
 
 # Game-Over buttons
 play_again_button_surface = pygame.image.load(
@@ -89,22 +99,17 @@ enemy_destroyed_sound = pygame.mixer.Sound(
 )
 
 # set the music volume
-pygame.mixer.music.set_volume(0.5)  # Volume (0.0 bis 1.0)
+pygame.mixer.music.set_volume(0.2)  # Volume (0.0 bis 1.0)
 
 # set the sound volume
-button_sound.set_volume(0.5)
-player_destroyed_sound.set_volume(0.5)
-player_shoot_sound.set_volume(0.5)
-player_damage_sound.set_volume(0.5)
-enemy_destroyed_sound.set_volume(0.5)
+button_sound.set_volume(0.2)
+player_destroyed_sound.set_volume(0.2)
+player_shoot_sound.set_volume(0.1)
+player_damage_sound.set_volume(0.2)
+enemy_destroyed_sound.set_volume(0.2)
 
 # Arena
-# Wasteland_arena = arena(all_sprites, collision_sprites,
-# "Maps/Wasteland_Map/Roboarena_Wasteland.tmx", 32)
-# Wasteland_arena.setup()
-Wasteland_arena = arena(all_sprites, collision_sprites,
-                        "Maps/Toxic_Map/Roboarena_Toxic.tmx", 32)
-Wasteland_arena.setup()
+selected_map = ""
 
 # Player
 player = Player((1500, 800), (all_sprites, collision_sprites),
@@ -128,17 +133,14 @@ enemy_event = pygame.event.custom_type()
 pygame.time.set_timer(enemy_event, 8000)
 
 
-def reset_game():
+def reset_game(selected_map):
     global game_active, game_over_active, main_menu_active, all_sprites
     global score, score_rect, score_surface, score_sprite
     global collision_sprites, enemy_sprites, bullet_sprites
-    global enemy_bullet_sprites, bullet_sprites
+    global enemy_bullet_sprites, game_map
     global player, healthbar, player_cannon, player_cannonb
 
     # Spielzustände zurücksetzen
-    game_active = True
-    game_over_active = False
-    main_menu_active = False
     score = 0
 
     # Erstelle neue Gruppen
@@ -148,10 +150,9 @@ def reset_game():
     bullet_sprites = pygame.sprite.Group()
     enemy_bullet_sprites = pygame.sprite.Group()
 
-    # Arena neu erstellen
-    Wasteland_arena = arena(all_sprites, collision_sprites,
-                            "Maps/Toxic_Map/Roboarena_Toxic.tmx", 32)
-    Wasteland_arena.setup()
+    # Re-create the arena with the selected map
+    game_map = arena(all_sprites, collision_sprites, selected_map, 32)
+    game_map.setup()
 
     # Spieler und seine Kanonen neu erstellen
     player = Player(
@@ -178,6 +179,8 @@ def reset_game():
     # Gesundheitsleiste neu erstellen
     healthbar = Healthbar(player, all_sprites)
     all_sprites.add(healthbar)
+
+    return game_map
 
 
 # load enemy images
@@ -222,10 +225,11 @@ while True:
             if event.key == pygame.K_ESCAPE:
                 game_active = False
                 settings_active = False
+                main_menu_active = True
 
         # handler for enemy spawn event
         if event.type == enemy_event:
-            Enemy(choice(Wasteland_arena.spawn_positions),
+            Enemy(choice(game_map.spawn_positions),
                   choice(list(enemy_frames.values())),
                   (all_sprites, enemy_sprites, collision_sprites),
                   player, collision_sprites, enemy_bullet_sprites)
@@ -299,6 +303,48 @@ while True:
         # draw all sprites
         all_sprites.draw(player.rect.center)
 
+    elif map_selection_active:
+        pygame.display.set_caption("Map Selection")
+        screen.fill("grey")
+
+        # Render the map selection text
+        text_font = pygame.font.Font(None, 80)
+        text_surface = text_font.render("Choose a Map", True, "black")
+        text_rect = text_surface.get_rect(center=(
+            SCREEN_WIDTH // 2, SCREEN_HEIGHT // 6))
+        screen.blit(text_surface, text_rect)
+
+        # Display Wasteland and Toxic map buttons
+        wasteland_button_rect = wasteland_button_surface.get_rect(
+            center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2.5))
+        screen.blit(wasteland_button_surface, wasteland_button_rect)
+
+        toxic_button_rect = toxic_button_surface.get_rect(
+            center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 1.5))
+        screen.blit(toxic_button_surface, toxic_button_rect)
+
+        # Check for button clicks
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if wasteland_button_rect.collidepoint(event.pos):
+                # Set Wasteland arena
+                selected_map = "Maps/Wasteland_Map/Roboarena_Wasteland.tmx"
+                reset_game(selected_map)
+                # Start game with Wasteland map
+                game_active = True
+                map_selection_active = False
+                button_sound.play()
+                pygame.mixer.music.stop()  # Stop the background music
+
+            elif toxic_button_rect.collidepoint(event.pos):
+                # Set Toxic arena
+                selected_map = "Maps/Toxic_Map/Roboarena_Toxic.tmx"
+                reset_game(selected_map)
+                # Start game with Toxic map
+                game_active = True
+                map_selection_active = False
+                button_sound.play()
+                pygame.mixer.music.stop()
+
     elif settings_active:
         pygame.display.set_caption("Settings")
         screen.fill("black")
@@ -336,13 +382,17 @@ while True:
         screen.blit(play_again_button_surface, play_again_button_rect)
         if event.type == pygame.MOUSEBUTTONDOWN:
             if play_again_button_rect.collidepoint(event.pos):
-                reset_game()
+                reset_game(selected_map)
                 button_sound.play()
+                map_selection_active = True
+                game_over_active = False
+                main_menu_active = False
+                pygame.time.delay(20)
             if main_menu_button_rect.collidepoint(event.pos):
+                reset_game(selected_map)
                 settings_active = False
                 game_over_active = False
                 game_active = False
-                pygame.time.delay(100)
                 main_menu_active = True
                 button_sound.play()
 
@@ -374,15 +424,17 @@ while True:
         screen.blit(quit_button_surface, quit_button_rect)
         if event.type == pygame.MOUSEBUTTONDOWN:
             if start_button_rect.collidepoint(event.pos):
-                game_active = True
+                main_menu_active = False
+                map_selection_active = True
                 pygame.mixer.music.stop()  # stop the backround music
                 button_sound.play()
+                pygame.time.delay(100)
             elif settings_button_rect.collidepoint(event.pos):
+                main_menu_active = False
                 settings_active = True
                 pygame.mixer.music.stop()  # stop the backround music
                 button_sound.play()
             elif quit_button_rect.collidepoint(event.pos):
-                print("1")
                 pygame.quit()
 
     pygame.display.flip()  # Refresh on-screen display
