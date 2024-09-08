@@ -222,6 +222,7 @@ while True:
             if event.key == pygame.K_ESCAPE:
                 game_active = False
                 settings_active = False
+
         # handler for enemy spawn event
         if event.type == enemy_event:
             Enemy(choice(Wasteland_arena.spawn_positions),
@@ -252,11 +253,11 @@ while True:
         # bullet collisions
         if bullet_sprites:
             for bullet in bullet_sprites:
-                collision_sprites = pygame.sprite.spritecollide(
+                hit_sprites = pygame.sprite.spritecollide(
                     bullet, enemy_sprites, dokill=True,
                     collided=pygame.sprite.collide_mask)
-                if collision_sprites:
-                    for sprite in collision_sprites:
+                if hit_sprites:
+                    for sprite in hit_sprites:
                         sprite.destroy()
                         enemy_sprites.remove(sprite)  # Remove from group
                         bullet.kill()  # Remove the bullet
