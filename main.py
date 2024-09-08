@@ -521,6 +521,7 @@ while True:
                 pygame.time.delay(100)
             elif quit_button_rect.collidepoint(event.pos):
                 pygame.quit()
+                raise SystemExit
 
     pygame.display.flip()  # Refresh on-screen display
     clock.tick(60)  # wait until next frame (at 60 FPS)
