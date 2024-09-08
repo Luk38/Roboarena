@@ -384,6 +384,7 @@ while True:
             if play_again_button_rect.collidepoint(event.pos):
                 reset_game(selected_map)
                 button_sound.play()
+                pygame.time.delay(100)
                 map_selection_active = True
                 game_over_active = False
                 main_menu_active = False
@@ -427,6 +428,7 @@ while True:
                 map_selection_active = True
                 pygame.mixer.music.stop()  # stop the backround music
                 button_sound.play()
+                pygame.time.delay(100)
             elif settings_button_rect.collidepoint(event.pos):
                 main_menu_active = False
                 settings_active = True
