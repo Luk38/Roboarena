@@ -11,8 +11,7 @@ player_bullet_surf = pygame.transform.scale_by(player_bullet_surf, 0.3)
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, pos, frames, groups, player, collision_sprites,
                  bullet_sprites):
-      
-        super().__init__(groups[0], groups[1], groups[2])
+        super().__init__(*groups)
 
         self.player = player
         self.enemy_sprites = groups[1]
