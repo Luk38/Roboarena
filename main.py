@@ -222,7 +222,7 @@ while True:
             if event.key == pygame.K_ESCAPE:
                 game_active = False
                 settings_active = False
-        
+
         # handler for enemy spawn event
         if event.type == enemy_event:
             Enemy(choice(Wasteland_arena.spawn_positions),
@@ -263,7 +263,7 @@ while True:
                         bullet.kill()  # Remove the bullet
                         score += 1
                         enemy_destroyed_sound.play()
-    
+
         if enemy_bullet_sprites:
             # check if player is hit by enemy bullet
             player_hit = pygame.sprite.spritecollide(
