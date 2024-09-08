@@ -84,7 +84,7 @@ class Enemy(pygame.sprite.Sprite):
             pos = self.rect.center
             self.image = pygame.image.load("img/shot/1.png")
             self.image = pygame.image.load("img/shot/2.png")
-            Bullet(player_bullet_surf, pos,
+            Bullet(self.bullet_surf, pos,
                    self.shooting_dir,
                    (self.all_sprites, self.bullet_sprites))
             self.last_shot_time = current_time

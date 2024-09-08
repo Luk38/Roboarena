@@ -1,4 +1,5 @@
 import pygame
+import pygame_gui
 from player import Player
 from arena import arena
 from groups import AllSprites
@@ -22,7 +23,6 @@ BLACK = (0, 0, 0)
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("RoboArena")
 
-
 clock = pygame.time.Clock()
 
 # Variable if game active
@@ -31,6 +31,24 @@ settings_active = False
 game_over_active = False
 main_menu_active = True
 map_selection_active = False
+
+# GUI-Manager
+manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+# sliders
+slider_music = pygame_gui.elements.UIHorizontalSlider(
+    relative_rect=pygame.Rect((500, 250), (350, 35)),  # position and size
+    start_value=0.5,
+    value_range=(0, 1),
+    manager=manager  # GUI-Manager
+)
+
+slider_sound = pygame_gui.elements.UIHorizontalSlider(
+    relative_rect=pygame.Rect((500, 350), (350, 35)),  # position and size
+    start_value=0.5,
+    value_range=(0, 1),
+    manager=manager  # GUI-Manager
+)
 
 # Main Menu buttons
 start_button_surface = pygame.image.load("img/Menu-images/startbutton.png")
@@ -99,14 +117,14 @@ enemy_destroyed_sound = pygame.mixer.Sound(
 )
 
 # set the music volume
-pygame.mixer.music.set_volume(0.2)  # Volume (0.0 bis 1.0)
+pygame.mixer.music.set_volume(0.5)  # Volume (0.0 bis 1.0)
 
 # set the sound volume
-button_sound.set_volume(0.2)
-player_destroyed_sound.set_volume(0.2)
-player_shoot_sound.set_volume(0.1)
-player_damage_sound.set_volume(0.2)
-enemy_destroyed_sound.set_volume(0.2)
+button_sound.set_volume(0.5)
+player_destroyed_sound.set_volume(0.5)
+player_shoot_sound.set_volume(0.5)
+player_damage_sound.set_volume(0.5)
+enemy_destroyed_sound.set_volume(0.5)
 
 # Arena
 selected_map = ""
@@ -217,6 +235,9 @@ all_sprites.add(healthbar)
 
 while True:
     # Process player inputs. Event handler
+    time_delta = clock.tick(1000)  # time between frames
+
+    # Process player inputs. Event handler
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -249,8 +270,6 @@ while True:
                     mouse_button_pressed = False
 
     if game_active:
-        # Do logical updates here.
-        # ...
         pygame.display.set_caption("Roboarena")
         screen.fill("light yellow")  # Fill the display with a solid color
 
@@ -296,6 +315,8 @@ while True:
 
         # update all sprites
         all_sprites.update()
+        # update GUI-Manager
+        manager.update(time_delta)
         # load_images()
         # Render the graphics here.
         # ...
@@ -346,8 +367,69 @@ while True:
                 pygame.mixer.music.stop()
 
     elif settings_active:
+        # passes events to GUI-Manager
+        manager.process_events(event)
         pygame.display.set_caption("Settings")
-        screen.fill("black")
+        screen.fill("grey")
+
+        # Settings Text
+        settings_text_font = pygame.font.Font(None, 100)
+        settings_text_surface = settings_text_font.render(
+            "Settings", True, "black"
+        )
+        settings_text_rect = settings_text_surface.get_rect(
+            center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 6)
+        )
+        screen.blit(settings_text_surface, settings_text_rect)
+
+        # Music volume Text
+        music_volume_text_font = pygame.font.Font(None, 50)
+        music_volume_text_surface = music_volume_text_font.render(
+            "music volume", True, "black"
+        )
+        music_volume_text_rect = music_volume_text_surface.get_rect(
+            center=(SCREEN_WIDTH // 7.2, 267)
+        )
+        screen.blit(music_volume_text_surface, music_volume_text_rect)
+
+        # sound effects volume Text
+        sound_effects_volume_text_font = pygame.font.Font(None, 50)
+        sound_effects_volume_text_surface = (
+            sound_effects_volume_text_font.render(
+                "sound effects volume", True, "black"))
+        sound_effects_volume_text_rect = (
+            sound_effects_volume_text_surface.get_rect(
+                center=(SCREEN_WIDTH // 5, 367)))
+        screen.blit(
+            sound_effects_volume_text_surface, sound_effects_volume_text_rect
+        )
+
+        # slider
+        manager.update(time_delta)
+        manager.draw_ui(screen)
+
+        # set main music volume
+        pygame.mixer.music.set_volume(slider_music.get_current_value())
+
+        # set sound effects volume
+        button_sound.set_volume(slider_sound.get_current_value())
+        player_destroyed_sound.set_volume(slider_sound.get_current_value())
+        player_shoot_sound.set_volume(slider_sound.get_current_value())
+        player_damage_sound.set_volume(slider_sound.get_current_value())
+        enemy_destroyed_sound.set_volume(slider_sound.get_current_value())
+
+        main_menu_button_rect = main_menu_button_surface.get_rect(
+            center=(SCREEN_WIDTH // 1.47, 500))
+        screen.blit(main_menu_button_surface, main_menu_button_rect)
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if main_menu_button_rect.collidepoint(event.pos):
+                settings_active = False
+                game_over_active = False
+                game_active = False
+                main_menu_active = True
+                button_sound.play()
+                pygame.time.delay(100)
 
     elif game_over_active:
         pygame.display.set_caption("Game Over")
@@ -386,8 +468,9 @@ while True:
                 button_sound.play()
                 map_selection_active = True
                 game_over_active = False
+                game_active = False
                 main_menu_active = False
-                pygame.time.delay(20)
+                pygame.time.delay(100)
             if main_menu_button_rect.collidepoint(event.pos):
                 reset_game(selected_map)
                 settings_active = False
@@ -395,6 +478,7 @@ while True:
                 game_active = False
                 main_menu_active = True
                 button_sound.play()
+                pygame.time.delay(100)
 
     elif main_menu_active:
         # Do logical updates here.
@@ -434,6 +518,7 @@ while True:
                 settings_active = True
                 pygame.mixer.music.stop()  # stop the backround music
                 button_sound.play()
+                pygame.time.delay(100)
             elif quit_button_rect.collidepoint(event.pos):
                 pygame.quit()
 
