@@ -4,8 +4,9 @@ from random import choice
 from sprites import Bullet
 
 # Bullet
-player_bullet_surf = pygame.image.load("img/Assets/Plasma.png")
-player_bullet_surf = pygame.transform.scale_by(player_bullet_surf, 0.3)
+player_bullet_surf = pygame.image.load("img/Assets/enemy_bullet.png")
+player_bullet_surf = pygame.transform.scale_by(player_bullet_surf, 1.25)
+player_bullet_surf = pygame.transform.rotate(player_bullet_surf, 90)
 
 
 class Enemy(pygame.sprite.Sprite):
