@@ -13,7 +13,7 @@ class Player(pygame.sprite.Sprite):
         self.lives = 10
 
         # movement
-        self.vel = 5
+        self.vel = 10
         self.dir = pygame.Vector2()
         self.collision_sprites = collision_sprites
 
