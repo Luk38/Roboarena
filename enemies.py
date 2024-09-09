@@ -6,7 +6,7 @@ from sprites import Bullet
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, pos, frames, groups, player, collision_sprites,
-                 bullet_sprites, key):
+                 bullet_sprites, key, shoot_cooldown):
         super().__init__(*groups)
 
         self.player = player
@@ -53,7 +53,7 @@ class Enemy(pygame.sprite.Sprite):
 
         # rect
         self.rect = self.image.get_rect(center=pos)
-        self.hitbox_rect = self.rect.inflate(-80, -100)
+        self.hitbox_rect = self.rect.inflate(-70, -90)
         self.collision_sprites = collision_sprites
 
         # move
@@ -64,7 +64,7 @@ class Enemy(pygame.sprite.Sprite):
         # shooting
         self.shooting_dir = pygame.math.Vector2()
         self.last_shot_time = pygame.time.get_ticks()
-        self.shoot_cooldown = 2500
+        self.shoot_cooldown = shoot_cooldown
 
         # Bullet
         self.bullet_surf = pygame.image.load("img/Assets/enemy_bullet.png")
@@ -112,7 +112,6 @@ class Enemy(pygame.sprite.Sprite):
         current_time = pygame.time.get_ticks()
         if current_time - self.last_shot_time >= self.shoot_cooldown:
             pos = self.rect.center
-            self.animation_speed = 0.005
             if self.state == "right":
                 self.frames = self.shooting_frames_right
             else:
