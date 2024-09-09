@@ -156,8 +156,12 @@ cannon_cooldown = 50
 mouse_button_pressed = False
 
 # enemy spawn timer
+enemy_spawn_time = 4000
 enemy_event = pygame.event.custom_type()
-pygame.time.set_timer(enemy_event, 8000)
+pygame.time.set_timer(enemy_event, enemy_spawn_time)
+
+# enemy shoot timer
+enemy_shoot_cooldown = 2000
 
 
 def reset_game(selected_map):
@@ -246,8 +250,12 @@ while True:
                     game_active = False
                     pause_active = True
                 else:
+                    game_active = False
                     settings_active = False
+                    game_over_active = False
                     main_menu_active = True
+                    map_selection_active = False
+                    pause_active = False
 
         # handler for enemy spawn event
         if event.type == enemy_event:
@@ -257,7 +265,7 @@ while True:
                       frames_list[index],
                       (all_sprites, enemy_sprites),
                       player, collision_sprites, enemy_bullet_sprites,
-                      enemy_type[index])
+                      enemy_type[index], enemy_shoot_cooldown)
 
         if game_active:
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -277,6 +285,9 @@ while True:
         pygame.display.set_caption("Roboarena")
         screen.fill("light yellow")  # Fill the display with a solid color
 
+        if not pygame.mixer.music.get_busy():
+            pygame.mixer.music.play(-1)
+
         # bullet collisions
         if bullet_sprites:
             for bullet in bullet_sprites:
@@ -290,6 +301,14 @@ while True:
                         bullet.kill()  # Remove the bullet
                         score.score += 1
                         enemy_destroyed_sound.play()
+                    if score.score % 10 == 0:
+                        if enemy_shoot_cooldown > 100:
+                            enemy_shoot_cooldown -= 100
+                        if enemy_spawn_time > 200:
+                            enemy_spawn_time -= 200
+                            enemy_event = pygame.event.custom_type()
+                            pygame.time.set_timer(
+                                enemy_event, enemy_spawn_time)
 
                 obj_hit_sprites = pygame.sprite.spritecollide(
                     bullet, collision_sprites, dokill=False,
@@ -583,7 +602,6 @@ while True:
             elif settings_button_rect.collidepoint(event.pos):
                 main_menu_active = False
                 settings_active = True
-                pygame.mixer.music.stop()  # stop the backround music
                 button_sound.play()
             elif quit_button_rect.collidepoint(event.pos):
                 pygame.quit()
