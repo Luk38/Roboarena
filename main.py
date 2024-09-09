@@ -250,10 +250,11 @@ while True:
 
         # handler for enemy spawn event
         if event.type == enemy_event:
-            Enemy(choice(game_map.spawn_positions),
-                  choice(list(enemy_frames.values())),
-                  (all_sprites, enemy_sprites, collision_sprites),
-                  player, collision_sprites, enemy_bullet_sprites)
+            if game_active:
+                Enemy(choice(game_map.spawn_positions),
+                      choice(list(enemy_frames.values())),
+                      (all_sprites, enemy_sprites, collision_sprites),
+                      player, collision_sprites, enemy_bullet_sprites)
 
         if game_active:
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -423,13 +424,17 @@ while True:
         screen.blit(main_menu_button_surface, main_menu_button_rect)
 
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if main_menu_button_rect.collidepoint(event.pos):
-                settings_active = False
-                game_over_active = False
-                game_active = False
-                main_menu_active = True
-                button_sound.play()
-                pygame.time.delay(100)
+            if not mouse_button_pressed:
+                mouse_button_pressed = True
+                if main_menu_button_rect.collidepoint(event.pos):
+                    settings_active = False
+                    game_over_active = False
+                    game_active = False
+                    main_menu_active = True
+                    button_sound.play()
+
+        if event.type == pygame.MOUSEBUTTONUP:
+            mouse_button_pressed = False
 
     elif game_over_active:
         pygame.display.set_caption("Game Over")
@@ -462,7 +467,8 @@ while True:
         play_again_button_rect = play_again_button_surface.get_rect(
             center=(SCREEN_WIDTH // 3, SCREEN_HEIGHT // 1.5))
         screen.blit(play_again_button_surface, play_again_button_rect)
-        if event.type == pygame.MOUSEBUTTONDOWN:
+        if event.type == pygame.MOUSEBUTTONDOWN and not mouse_button_pressed:
+            mouse_button_pressed = True
             if play_again_button_rect.collidepoint(event.pos):
                 reset_game(selected_map)
                 button_sound.play()
@@ -470,7 +476,6 @@ while True:
                 game_over_active = False
                 game_active = False
                 main_menu_active = False
-                pygame.time.delay(100)
             if main_menu_button_rect.collidepoint(event.pos):
                 reset_game(selected_map)
                 settings_active = False
@@ -478,7 +483,8 @@ while True:
                 game_active = False
                 main_menu_active = True
                 button_sound.play()
-                pygame.time.delay(100)
+        if event.type == pygame.MOUSEBUTTONUP:
+            mouse_button_pressed = False
 
     elif main_menu_active:
         # Do logical updates here.
@@ -506,22 +512,22 @@ while True:
         quit_button_rect = quit_button_surface.get_rect(
             center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 1.5))
         screen.blit(quit_button_surface, quit_button_rect)
-        if event.type == pygame.MOUSEBUTTONDOWN:
+        if event.type == pygame.MOUSEBUTTONDOWN and not mouse_button_pressed:
+            mouse_button_pressed = True
             if start_button_rect.collidepoint(event.pos):
                 main_menu_active = False
                 map_selection_active = True
                 pygame.mixer.music.stop()  # stop the backround music
                 button_sound.play()
-                pygame.time.delay(100)
             elif settings_button_rect.collidepoint(event.pos):
                 main_menu_active = False
                 settings_active = True
                 pygame.mixer.music.stop()  # stop the backround music
                 button_sound.play()
-                pygame.time.delay(100)
             elif quit_button_rect.collidepoint(event.pos):
                 pygame.quit()
                 raise SystemExit
-
+        if event.type == pygame.MOUSEBUTTONUP:
+            mouse_button_pressed = False
     pygame.display.flip()  # Refresh on-screen display
     clock.tick(60)  # wait until next frame (at 60 FPS)
