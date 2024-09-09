@@ -130,8 +130,8 @@ enemy_destroyed_sound.set_volume(0.5)
 selected_map = ""
 
 # Player
-player = Player((1500, 800), (all_sprites, collision_sprites),
-                collision_sprites)
+player = Player((1500, 800), all_sprites,
+                collision_sprites, enemy_sprites)
 player_cannonb = Cannon(
     player, all_sprites, "img/Assets/Gun_07_B.png", 0.25)
 player_cannon = Cannon(player, all_sprites, "img/Assets/cannon.png", 0.35)
@@ -174,7 +174,8 @@ def reset_game(selected_map):
 
     # Spieler und seine Kanonen neu erstellen
     player = Player(
-        (1500, 800), (all_sprites, collision_sprites), collision_sprites
+        (1500, 800), all_sprites, collision_sprites,
+        enemy_sprites
     )
     player_cannonb = Cannon(
         player, all_sprites, "img/Assets/Gun_07_B.png", 0.25
@@ -239,7 +240,7 @@ while True:
             if game_active:
                 Enemy(choice(game_map.spawn_positions),
                       choice(list(enemy_frames.values())),
-                      (all_sprites, enemy_sprites, collision_sprites),
+                      (all_sprites, enemy_sprites),
                       player, collision_sprites, enemy_bullet_sprites)
 
         if game_active:
@@ -274,6 +275,12 @@ while True:
                         score.score += 1
                         enemy_destroyed_sound.play()
 
+                obj_hit_sprites = pygame.sprite.spritecollide(
+                    bullet, collision_sprites, dokill=False,
+                    collided=pygame.sprite.collide_mask)
+                if obj_hit_sprites:
+                    bullet.kill()
+
         if enemy_bullet_sprites:
             # check if player is hit by enemy bullet
             player_hit = pygame.sprite.spritecollide(
@@ -293,6 +300,12 @@ while True:
                         game_active = False
                         game_over_active = True
                         player_destroyed_sound.play()
+            for bullet in enemy_bullet_sprites:
+                obj_hit = pygame.sprite.spritecollide(
+                        bullet, collision_sprites, dokill=False,
+                        collided=pygame.sprite.collide_mask)
+                if obj_hit:
+                    bullet.kill()
 
         # update all sprites
         all_sprites.update()
