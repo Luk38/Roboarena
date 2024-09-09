@@ -3,7 +3,7 @@ import pygame_gui
 from player import Player
 from arena import arena
 from groups import AllSprites
-from sprites import Cannon, Bullet, Healthbar
+from sprites import Cannon, Bullet, Healthbar, Score
 from enemies import Enemy
 from random import choice
 from os.path import join
@@ -153,7 +153,7 @@ pygame.time.set_timer(enemy_event, 8000)
 
 def reset_game(selected_map):
     global game_active, game_over_active, main_menu_active, all_sprites
-    global score, score_rect, score_surface, score_sprite
+    global score
     global collision_sprites, enemy_sprites, bullet_sprites
     global enemy_bullet_sprites, game_map
     global player, healthbar, player_cannon, player_cannonb
@@ -184,15 +184,8 @@ def reset_game(selected_map):
     )
 
     # Spieler-Score
-    score = 0
-    score_font = pygame.font.Font(None, 50)
-    score_surface = score_font.render(f"Score: {score}", True, "black")
-    score_rect = score_surface.get_rect(center=(player.rect.center))
-
-    score_sprite = pygame.sprite.Sprite()
-    score_sprite.image = score_surface
-    score_sprite.rect = score_rect
-    all_sprites.add(score_sprite)
+    score = Score(player, all_sprites)
+    all_sprites.add(score)
 
     # Gesundheitsleiste neu erstellen
     healthbar = Healthbar(player, all_sprites)
@@ -219,15 +212,8 @@ def load_images():
 enemy_frames = load_images()
 
 # Score
-score = 0
-score_font = pygame.font.Font(None, 50)
-score_surface = score_font.render(f"Score: {score}", True, "black")
-score_rect = score_surface.get_rect(center=(player.rect.center))
-
-score_sprite = pygame.sprite.Sprite()
-score_sprite.image = score_surface
-score_sprite.rect = score_rect
-all_sprites.add(score_sprite)
+score = Score(player, all_sprites)
+all_sprites.add(score)
 
 # Healthbar
 healthbar = Healthbar(player, all_sprites)
@@ -285,7 +271,7 @@ while True:
                         sprite.destroy()
                         enemy_sprites.remove(sprite)  # Remove from group
                         bullet.kill()  # Remove the bullet
-                        score += 1
+                        score.score += 1
                         enemy_destroyed_sound.play()
 
         if enemy_bullet_sprites:
@@ -307,12 +293,6 @@ while True:
                         game_active = False
                         game_over_active = True
                         player_destroyed_sound.play()
-
-        # update the score
-        score_surface = score_font.render(f"Score: {score}", True, BLACK)
-        score_sprite.image = score_surface
-        score_sprite.rect.center = player.rect.center + pygame.Vector2(
-            SCREEN_WIDTH / 2.5, - SCREEN_HEIGHT / 2.2)
 
         # update all sprites
         all_sprites.update()
@@ -347,25 +327,30 @@ while True:
 
         # Check for button clicks
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if wasteland_button_rect.collidepoint(event.pos):
-                # Set Wasteland arena
-                selected_map = "Maps/Wasteland_Map/Roboarena_Wasteland.tmx"
-                reset_game(selected_map)
-                # Start game with Wasteland map
-                game_active = True
-                map_selection_active = False
-                button_sound.play()
-                pygame.mixer.music.stop()  # Stop the background music
+            if (event.type == pygame.MOUSEBUTTONDOWN
+               and not mouse_button_pressed):
+                mouse_button_pressed = True
+                if wasteland_button_rect.collidepoint(event.pos):
+                    # Set Wasteland arena
+                    selected_map = "Maps/Wasteland_Map/Roboarena_Wasteland.tmx"
+                    reset_game(selected_map)
+                    # Start game with Wasteland map
+                    game_active = True
+                    map_selection_active = False
+                    button_sound.play()
+                    pygame.mixer.music.stop()  # Stop the background music
 
-            elif toxic_button_rect.collidepoint(event.pos):
-                # Set Toxic arena
-                selected_map = "Maps/Toxic_Map/Roboarena_Toxic.tmx"
-                reset_game(selected_map)
-                # Start game with Toxic map
-                game_active = True
-                map_selection_active = False
-                button_sound.play()
-                pygame.mixer.music.stop()
+                elif toxic_button_rect.collidepoint(event.pos):
+                    # Set Toxic arena
+                    selected_map = "Maps/Toxic_Map/Roboarena_Toxic.tmx"
+                    reset_game(selected_map)
+                    # Start game with Toxic map
+                    game_active = True
+                    map_selection_active = False
+                    button_sound.play()
+                    pygame.mixer.music.stop()
+        if event.type == pygame.MOUSEBUTTONUP:
+            mouse_button_pressed = False
 
     elif settings_active:
         # passes events to GUI-Manager
@@ -453,7 +438,7 @@ while True:
         # Score Text
         score_text_font = pygame.font.Font(None, 70)
         score_text_surface = score_text_font.render(
-            f"Score: {score}", True, "white"
+            f"Score: {score.score}", True, "white"
         )
         score_text_rect = score_text_surface.get_rect(
             center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2.5)

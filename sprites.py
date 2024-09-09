@@ -140,3 +140,23 @@ class Healthbar(pygame.sprite.Sprite):
         if self.current_health < self.total_health:
             self.current_health += 1
             self.update()
+
+
+class Score(pygame.sprite.Sprite):
+    def __init__(self, player, groups):
+        super().__init__()
+        self.score = 0
+        self.font = pygame.font.Font(None, 50)
+        self.player = player
+        self.pos = player.pos
+        self.image = self.font.render(f"Score: {self.score}", True, "black")
+        self.rect = self.image.get_rect()
+        self.update()
+
+    def update(self):
+        # Position the healthbar relative to the player
+        offset = pygame.Vector2(1000 / 2.5, - 720 / 2.2)
+        self.rect.center = self.player.rect.center + offset
+
+        # Zeichne den Text 'HP'
+        self.image = self.font.render(f"Score: {self.score}", True, BLACK)
