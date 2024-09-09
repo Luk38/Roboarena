@@ -52,6 +52,52 @@ class Cannon(pygame.sprite.Sprite):
         self.rect.topleft = self.rotated_rect.topleft
 
 
+class Cannon2(pygame.sprite.Sprite):
+    def __init__(self, player, groups, image, scale):
+        # player connection
+        self.player = player  # This connects Cannon2 to Player2
+        self.player_direction = pygame.Vector2(1, 0)
+        self.SCREEN_WIDTH = 1000
+        self.SCREEN_HEIGHT = 720
+
+        # sprite setup
+        super().__init__(groups)
+        self.cannon_surf = pygame.image.load(image)
+        self.cannon_surf = pygame.transform.scale_by(self.cannon_surf, scale)
+        self.image = self.cannon_surf
+        self.rect = self.image.get_rect(center=self.player.rect.center)
+
+    def get_direction(self):
+        keys = pygame.key.get_pressed()
+
+        # Set direction directly to match the arrow key pressed
+        if keys[pygame.K_RIGHT]:
+            self.player_direction = pygame.Vector2(1, 0)  # Move right
+        elif keys[pygame.K_LEFT]:
+            self.player_direction = pygame.Vector2(-1, 0)  # Move left
+        elif keys[pygame.K_DOWN]:
+            self.player_direction = pygame.Vector2(0, 1)  # Move down
+        elif keys[pygame.K_UP]:
+            self.player_direction = pygame.Vector2(0, -1)  # Move up
+
+        self.player_direction = self.player_direction.normalize()
+
+    def rotate_cannon(self):
+        # Calculate the angle based on the player direction vector
+        angle = degrees(atan2(
+            self.player_direction.x, self.player_direction.y))
+        self.rotated_image = pygame.transform.rotate(
+            self.cannon_surf, angle - 180)
+        self.rotated_rect = self.rotated_image.get_rect(
+            center=(self.player.rect.center))
+
+    def update(self):
+        self.get_direction()  # Get the current movement direction from Player2
+        self.rotate_cannon()  # Rotate the cannon to face that direction
+        self.image = self.rotated_image  # Update the image
+        self.rect.topleft = self.rotated_rect.topleft
+
+
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, surf, pos, direction, groups):
         super().__init__(groups)

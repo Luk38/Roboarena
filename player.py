@@ -88,3 +88,13 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         self.input()
         self.movement()
+
+
+class Player2(Player):
+    def __init__(self, pos, groups, collision_sprites, enemy_sprites):
+        super().__init__(pos, groups, collision_sprites, enemy_sprites)
+
+    def input(self):
+        keys = pygame.key.get_pressed()
+        self.dir.x = int(keys[pygame.K_RIGHT]) - int(keys[pygame.K_LEFT])
+        self.dir.y = int(keys[pygame.K_DOWN]) - int(keys[pygame.K_UP])

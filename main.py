@@ -1,9 +1,9 @@
 import pygame
 import pygame_gui
-from player import Player
+from player import Player, Player2
 from arena import arena
 from groups import AllSprites
-from sprites import Cannon, Bullet, Healthbar, Score
+from sprites import Cannon, Cannon2, Bullet, Healthbar, Score
 from enemies import Enemy
 from random import choice, randint
 from os.path import join
@@ -145,6 +145,13 @@ player_cannonb = Cannon(
     player, all_sprites, "img/Assets/Gun_07_B.png", 0.25)
 player_cannon = Cannon(player, all_sprites, "img/Assets/cannon.png", 0.35)
 
+player2 = Player2((1600, 800), all_sprites,
+                  collision_sprites, enemy_sprites)
+player_cannonb2 = Cannon2(
+    player2, all_sprites, "img/Assets/Gun_07_B.png", 0.25)
+player_cannon2 = Cannon2(player2, all_sprites, "img/Assets/cannon.png", 0.35)
+
+
 # Bullet
 player_bullet_surf = pygame.image.load("img/Assets/Plasma.png")
 player_bullet_surf = pygame.transform.scale_by(player_bullet_surf, 0.3)
@@ -166,7 +173,7 @@ enemy_shoot_cooldown = 2000
 
 def reset_game(selected_map):
     global game_active, game_over_active, main_menu_active, all_sprites
-    global score, pause_active
+    global score, pause_active, player2, player_cannon2, player_cannonb2
     global collision_sprites, enemy_sprites, bullet_sprites
     global enemy_bullet_sprites, game_map
     global player, healthbar, player_cannon, player_cannonb
@@ -196,6 +203,13 @@ def reset_game(selected_map):
     player_cannon = Cannon(
         player, all_sprites, "img/Assets/cannon.png", 0.35
     )
+
+    player2 = Player2((1600, 800), all_sprites,
+                      collision_sprites, enemy_sprites)
+    player_cannonb2 = Cannon2(
+        player2, all_sprites, "img/Assets/Gun_07_B.png", 0.25)
+    player_cannon2 = Cannon2(
+        player2, all_sprites, "img/Assets/cannon.png", 0.35)
 
     # Spieler-Score
     score = Score(player, all_sprites)
@@ -280,6 +294,14 @@ while True:
             elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
                     mouse_button_pressed = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    pos2 = (player_cannonb2.rect.center +
+                            player_cannon2.player_direction * 30)
+                    print(player2.rect.center)
+                    Bullet(player_bullet_surf, pos2,
+                           player_cannon2.player_direction,
+                           (all_sprites, bullet_sprites))
 
     if game_active:
         pygame.display.set_caption("Roboarena")
