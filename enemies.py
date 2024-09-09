@@ -53,7 +53,7 @@ class Enemy(pygame.sprite.Sprite):
 
         # rect
         self.rect = self.image.get_rect(center=pos)
-        self.hitbox_rect = self.rect.inflate(-20, 0)
+        self.hitbox_rect = self.rect.inflate(-80, -100)
         self.collision_sprites = collision_sprites
 
         # move
@@ -150,6 +150,20 @@ class Enemy(pygame.sprite.Sprite):
                     elif self.dir.y > 0:
                         self.hitbox_rect.bottom = enemy.hitbox_rect.top
                     self.dir.y = 0
+
+        if self.player.hitbox_rect.colliderect(self.hitbox_rect):
+            if (direction == "horizontal"):
+                if self.dir.x > 0:
+                    self.hitbox_rect.right = self.player.hitbox_rect.left
+                elif self.dir.x < 0:
+                    self.hitbox_rect.left = self.player.hitbox_rect.right
+                self.dir.x = 0
+            else:
+                if self.dir.y < 0:
+                    self.hitbox_rect.top = self.player.hitbox_rect.bottom
+                elif self.dir.y > 0:
+                    self.hitbox_rect.bottom = self.player.hitbox_rect.top
+                self.dir.y = 0
 
     def destroy(self):
         # kill the enemy

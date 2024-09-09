@@ -2,7 +2,7 @@ import pygame
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, groups, collision_sprites):
+    def __init__(self, pos, groups, collision_sprites, enemy_sprites):
         super().__init__(groups)
         self.surf = pygame.image.load("img/Assets/Hull_08.png")
         self.surf = pygame.transform.scale_by(self.surf, 0.25)
@@ -16,6 +16,7 @@ class Player(pygame.sprite.Sprite):
         self.vel = 5
         self.dir = pygame.Vector2()
         self.collision_sprites = collision_sprites
+        self.enemy_sprites = enemy_sprites
 
     def collision(self, direction):
         for sprite in self.collision_sprites:
@@ -30,6 +31,21 @@ class Player(pygame.sprite.Sprite):
                         self.hitbox_rect.top = sprite.rect.bottom
                     elif self.dir.y > 0:
                         self.hitbox_rect.bottom = sprite.rect.top
+        for enemy in self.enemy_sprites:
+            if (enemy != self
+               and enemy.hitbox_rect.colliderect(self.hitbox_rect)):
+                if (direction == "horizontal"):
+                    if self.dir.x > 0:
+                        self.hitbox_rect.right = enemy.hitbox_rect.left
+                    elif self.dir.x < 0:
+                        self.hitbox_rect.left = enemy.hitbox_rect.right
+                    self.dir.x = 0
+                else:
+                    if self.dir.y < 0:
+                        self.hitbox_rect.top = enemy.hitbox_rect.bottom
+                    elif self.dir.y > 0:
+                        self.hitbox_rect.bottom = enemy.hitbox_rect.top
+                    self.dir.y = 0
 
     def input(self):
         keys = pygame.key.get_pressed()
