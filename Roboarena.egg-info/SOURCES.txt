@@ -1,0 +1,7 @@
+README.md
+setup.py
+Roboarena.egg-info/PKG-INFO
+Roboarena.egg-info/SOURCES.txt
+Roboarena.egg-info/dependency_links.txt
+Roboarena.egg-info/requires.txt
+Roboarena.egg-info/top_level.txt
