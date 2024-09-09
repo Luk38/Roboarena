@@ -6,7 +6,7 @@ from sprites import Bullet
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, pos, frames, groups, player, collision_sprites,
-                 bullet_sprites):
+                 bullet_sprites, key):
         super().__init__(*groups)
 
         self.player = player
@@ -15,11 +15,41 @@ class Enemy(pygame.sprite.Sprite):
         self.bullet_sprites = bullet_sprites
         self.clock = pygame.time.Clock()
         self.pos = pos
+        self.key = key
 
         # image
         self.frames, self.frame_index = frames, 0
         self.image = self.frames[self.frame_index]
+        self.state = ""
+        self.idle_frames_right = frames
+        self.idle_frames_left = []
         self.animation_speed = 0.08
+        self.shooting_frames_right = []
+        self.shooting_frames_left = []
+
+        for frame in self.idle_frames_right:
+            self.idle_frames_left.append(pygame.transform.flip(frame, True,
+                                                               False))
+
+        # load shoot animation imgs
+        if self.key == "enemy_1":
+            self.shooting_frames_right.append(pygame.image.load
+                                              ("img/shot/1/1.png")
+                                              .convert_alpha())
+            self.shooting_frames_right.append(pygame.image.load
+                                              ("img/shot/1/2.png")
+                                              .convert_alpha())
+        elif self.key == "enemy_2":
+            self.shooting_frames_right.append(pygame.image.load
+                                              ("img/shot/2/1.png")
+                                              .convert_alpha())
+            self.shooting_frames_right.append(pygame.image.load
+                                              ("img/shot/2/2.png")
+                                              .convert_alpha())
+
+        for frame in self.shooting_frames_right:
+            self.shooting_frames_left.append(pygame.transform.flip(frame, True,
+                                                                   False))
 
         # rect
         self.rect = self.image.get_rect(center=pos)
@@ -82,8 +112,11 @@ class Enemy(pygame.sprite.Sprite):
         current_time = pygame.time.get_ticks()
         if current_time - self.last_shot_time >= self.shoot_cooldown:
             pos = self.rect.center
-            self.image = pygame.image.load("img/shot/1.png")
-            self.image = pygame.image.load("img/shot/2.png")
+            self.animation_speed = 0.005
+            if self.state == "right":
+                self.frames = self.shooting_frames_right
+            else:
+                self.frames = self.shooting_frames_left
             Bullet(self.bullet_surf, pos,
                    self.shooting_dir,
                    (self.all_sprites, self.bullet_sprites))
@@ -123,6 +156,16 @@ class Enemy(pygame.sprite.Sprite):
         self.kill
 
     def update(self):
+        if self.player.rect.center[0] > self.rect.center[0]:
+            self.state = "right"
+        else:
+            self.state = "left"
+        if (pygame.time.get_ticks() > self.last_shot_time + 200 and
+                self.state == "right"):
+            self.frames = self.idle_frames_right
+        elif (pygame.time.get_ticks() > self.last_shot_time + 200 and
+                self.state == "left"):
+            self.frames = self.idle_frames_left
         self.move()
         self.animate()
         self.shoot()
