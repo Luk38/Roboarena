@@ -31,6 +31,7 @@ settings_active = False
 game_over_active = False
 main_menu_active = True
 map_selection_active = False
+pause_active = False
 
 # GUI-Manager
 manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -81,6 +82,14 @@ main_menu_button_surface = pygame.image.load(
 )
 main_menu_button_surface = pygame.transform.scale_by(
     main_menu_button_surface, 0.5
+)
+
+# Pause buttons
+continue_button_surface = pygame.image.load(
+    "img/Menu-images/continuebutton.png"
+)
+continue_button_surface = pygame.transform.scale_by(
+    continue_button_surface, 0.5
 )
 
 # groups
@@ -153,7 +162,7 @@ pygame.time.set_timer(enemy_event, 8000)
 
 def reset_game(selected_map):
     global game_active, game_over_active, main_menu_active, all_sprites
-    global score
+    global score, pause_active
     global collision_sprites, enemy_sprites, bullet_sprites
     global enemy_bullet_sprites, game_map
     global player, healthbar, player_cannon, player_cannonb
@@ -213,6 +222,7 @@ def load_images():
 enemy_frames = load_images()
 enemy_type = list(enemy_frames.keys())
 frames_list = list(enemy_frames.values())
+
 # Score
 score = Score(player, all_sprites)
 all_sprites.add(score)
@@ -232,9 +242,12 @@ while True:
             raise SystemExit
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                game_active = False
-                settings_active = False
-                main_menu_active = True
+                if game_active:
+                    game_active = False
+                    pause_active = True
+                else:
+                    settings_active = False
+                    main_menu_active = True
 
         # handler for enemy spawn event
         if event.type == enemy_event:
@@ -365,6 +378,53 @@ while True:
                     map_selection_active = False
                     button_sound.play()
                     pygame.mixer.music.stop()
+        if event.type == pygame.MOUSEBUTTONUP:
+            mouse_button_pressed = False
+
+    elif pause_active:
+        pygame.display.set_caption("Pause")
+        screen.fill("grey")
+
+        # Pause Text
+        pause_text_font = pygame.font.Font(None, 100)
+        pause_text_surface = pause_text_font.render(
+            "Pause", True, "black"
+        )
+        pause_text_rect = pause_text_surface.get_rect(
+            center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 6)
+        )
+        screen.blit(pause_text_surface, pause_text_rect)
+
+        # Score Text
+        score_text_font = pygame.font.Font(None, 70)
+        score_text_surface = score_text_font.render(
+            f"Score: {score.score}", True, "black"
+        )
+        score_text_rect = score_text_surface.get_rect(
+            center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2.5)
+        )
+        screen.blit(score_text_surface, score_text_rect)
+
+        # Game Over buttons
+        main_menu_button_rect = main_menu_button_surface.get_rect(
+            center=(SCREEN_WIDTH // 1.5, SCREEN_HEIGHT // 1.5))
+        screen.blit(main_menu_button_surface, main_menu_button_rect)
+        continue_button_rect = continue_button_surface.get_rect(
+            center=(SCREEN_WIDTH // 3, SCREEN_HEIGHT // 1.5))
+        screen.blit(continue_button_surface, continue_button_rect)
+        if event.type == pygame.MOUSEBUTTONDOWN and not mouse_button_pressed:
+            mouse_button_pressed = True
+            if continue_button_rect.collidepoint(event.pos):
+                button_sound.play()
+                game_active = True
+                pause_active = False
+            if main_menu_button_rect.collidepoint(event.pos):
+                reset_game(selected_map)
+                settings_active = False
+                game_active = False
+                pause_active = False
+                main_menu_active = True
+                button_sound.play()
         if event.type == pygame.MOUSEBUTTONUP:
             mouse_button_pressed = False
 
