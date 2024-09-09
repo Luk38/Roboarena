@@ -5,7 +5,7 @@ from arena import arena
 from groups import AllSprites
 from sprites import Cannon, Bullet, Healthbar, Score
 from enemies import Enemy
-from random import choice
+from random import choice, randint
 from os.path import join
 from os import walk
 
@@ -211,7 +211,8 @@ def load_images():
 
 
 enemy_frames = load_images()
-
+enemy_type = list(enemy_frames.keys())
+frames_list = list(enemy_frames.values())
 # Score
 score = Score(player, all_sprites)
 all_sprites.add(score)
@@ -238,10 +239,12 @@ while True:
         # handler for enemy spawn event
         if event.type == enemy_event:
             if game_active:
+                index = randint(0, 1)
                 Enemy(choice(game_map.spawn_positions),
-                      choice(list(enemy_frames.values())),
+                      frames_list[index],
                       (all_sprites, enemy_sprites),
-                      player, collision_sprites, enemy_bullet_sprites)
+                      player, collision_sprites, enemy_bullet_sprites,
+                      enemy_type[index])
 
         if game_active:
             if event.type == pygame.MOUSEBUTTONDOWN:
